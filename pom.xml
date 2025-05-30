@@ -6,7 +6,7 @@
 
   <groupId>com.zekai</groupId>
   <artifactId>Insta</artifactId>
-  <version>${revision}</version>
+  <version>0.0.1-SNAPSHOT</version>
 
   <!-- 项目名称 -->
   <name>${project.artifactId}</name>
@@ -19,6 +19,7 @@
   <!-- 子模块管理 -->
   <modules>
     <module>Insta-auth</module>
+    <module>Insta-framework</module>
   </modules>
 
   <properties>
