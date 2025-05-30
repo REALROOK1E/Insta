@@ -21,7 +21,7 @@
     <modules>
 
         <module>Insta-common</module>
-        <module>Insta-springboot-oplog</module>
+        <module>Insta-spring-boot-starter-oplog</module>
 
     </modules>
 

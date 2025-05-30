@@ -8,12 +8,16 @@
     </parent>
 
     <groupId>com.zekai.framework.oplog</groupId>
-    <artifactId>Insta-springboot-oplog</artifactId>
+    <artifactId>Insta-spring-boot-starter-oplog</artifactId>
     <packaging>jar</packaging>
 
-    <name>Insta-springboot-oplog</name>
-    <url>https://maven.apache.org</url>
+    <name>Insta-spring-boot-starter-oplog</name>
     <description>接口日志组件</description>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -22,9 +26,14 @@
         </dependency>
 
         <!-- AOP 切面 -->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
 </project>
