@@ -7,25 +7,24 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-
-    <groupId>com.zekai.framework.common</groupId>
-    <artifactId>Insta-common</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <groupId>com.zekai.framework.oplog</groupId>
+    <artifactId>Insta-springboot-oplog</artifactId>
     <packaging>jar</packaging>
-    <name>Insta-common</name>
 
-
+    <name>Insta-springboot-oplog</name>
+    <url>https://maven.apache.org</url>
+    <description>接口日志组件</description>
 
     <dependencies>
-        <!-- 避免编写那些冗余的 Java 样板式代码，如 get、set 方法等 -->
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <groupId>com.zekai.framework.common</groupId>
+            <artifactId>Insta-common</artifactId>
         </dependency>
+
+        <!-- AOP 切面 -->
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
     </dependencies>
 </project>

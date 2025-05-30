@@ -77,12 +77,22 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+
+      <dependency>
+        <groupId>com.zekai.framework.common</groupId>
+        <artifactId>Insta-common</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
   <build>
     <!-- 统一插件管理 -->
     <pluginManagement>
+
+
+
       <plugins>
         <plugin>
           <groupId>org.springframework.boot</groupId>

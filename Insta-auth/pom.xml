@@ -28,6 +28,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.zekai.framework.common</groupId>
+            <artifactId>Insta-common</artifactId>
+
+        </dependency>
     </dependencies>
 
     <build>
