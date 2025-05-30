@@ -94,6 +94,11 @@
         <artifactId>jackson-core</artifactId>
         <version>${jackson.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.zekai.framework.oplog</groupId>
+        <artifactId>Insta-spring-boot-starter-oplog</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

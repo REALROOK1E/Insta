@@ -13,7 +13,7 @@
     <!-- 指定打包方式 -->
     <packaging>jar</packaging>
 
-    <artifactId>xiaohashu-auth</artifactId>
+    <artifactId>Insta-auth</artifactId>
     <name>${project.artifactId}</name>
     <description>Insta：认证服务（负责处理用户登录、注册、账号注销等）</description>
 
@@ -33,6 +33,11 @@
             <groupId>com.zekai.framework.common</groupId>
             <artifactId>Insta-common</artifactId>
 
+        </dependency>
+        <dependency>
+            <groupId>com.zekai.framework.oplog</groupId>
+            <artifactId>Insta-spring-boot-starter-oplog</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
