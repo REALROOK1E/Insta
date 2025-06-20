@@ -4,7 +4,6 @@ package com.zekai.insta.auth.Controller;
 import cn.dev33.satoken.stp.StpUtil;
 import com.zekai.framework.common.response.Response;
 import com.zekai.insta.auth.domain.dataobject.UserDO;
-import com.zekai.framework.oplog.aspect.ApiOperationLog;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
