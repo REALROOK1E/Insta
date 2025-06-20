@@ -1,5 +1,6 @@
 package com.zekai.insta.auth;
 
+import com.zekai.framework.common.util.JsonUtils;
 import com.zekai.insta.auth.domain.dataobject.UserDO;
 import com.zekai.insta.auth.domain.mapper.UserDOMapper;
 import jakarta.annotation.Resource;
@@ -29,5 +30,13 @@ class InstaAuthApplicationTests {
 
         userDOMapper.insert(userDO);
     }
+    @Test
+    void testselect() {
+
+        UserDO userDO = userDOMapper.selectByPrimaryKey(4L);
+        log.info("user:{}", JsonUtils.toJsonString(userDO));
+
+    }
+
 
 }
