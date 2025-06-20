@@ -16,7 +16,8 @@ public enum ResponseCodeEnum implements ExceptionInterface {
     // ----------- 通用异常状态码 -----------
     SYSTEM_ERROR("Auth_00", "Whats going on?"),
     PARAM_NOT_VALID("Auth_01", "ParamErr"),
-
+    VERIFICATION_CODE_SEND_FREQUENTLY("Auth-02", "msg sent Too frequent, try again later"),
+    ;
     // ----------- 业务异常状态码 -----------
     ;
 
