@@ -16,7 +16,7 @@ public class RedisKeyConst {
          * @param phone
          * @return
          */
-        public static final String INSTA_ID_GENERATOR_KEY = "Insta_id_generator";
+        public static final String INSTA_ID_GENERATOR_KEY = "Insta.id.generator";
 
         public static String buildVerificationCodeKey(String phone) {
             return VERIFICATION_CODE_KEY_PREFIX + phone;
