@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -40,12 +41,21 @@ public class PushRolePermissions2RedisRunner implements ApplicationRunner {
     private PermissionDOMapper permissionDOMapper;
     @Resource
     private RolePermissionDOMapper rolePermissionDOMapper;
-
+    // 权限同步标记 Key
+    private static final String PUSH_PERMISSION_FLAG = "push.permission.flag";
     @Override
     public void run(ApplicationArguments args) {
         log.info("==> 服务启动，开始同步角色权限数据到 Redis 中...");
 
         try {
+            // 是否能够同步数据: 原子操作，只有在键 PUSH_PERMISSION_FLAG 不存在时，才会设置该键的值为 "1"，并设置过期时间为 1 天
+            boolean canPushed = redisTemplate.opsForValue().setIfAbsent(PUSH_PERMISSION_FLAG, "1", 1, TimeUnit.DAYS);
+
+            // 如果无法同步权限数据
+            if (!canPushed) {
+                log.warn("==> 角色权限数据已经同步至 Redis 中，不再同步...");
+                return;
+            }
 
             // 查询出所有角色
             List<RoleDO> roleDOS = roleDOMapper.selectEnabledList();
