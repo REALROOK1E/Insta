@@ -3,6 +3,7 @@ package com.zekai.insta.auth.service.impl;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.DateTime;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.zekai.framework.common.Exception.BizException;
 import com.zekai.framework.common.enums.DeletedEnum;
@@ -22,9 +23,11 @@ import com.zekai.insta.auth.service.UserService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -44,6 +47,9 @@ public class UserServiceImpl implements UserService {
     private RedisTemplate<String, Object> redisTemplate;
     @Resource
     private UserRoleDOMapper userRoleDOMapper;
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+
     /**
      * 登录与注册
      *
@@ -66,10 +72,7 @@ public class UserServiceImpl implements UserService {
                 String verificationCode = userLoginReqVO.getCode();
 
                 // 校验入参验证码是否为空
-                if (StringUtils.isBlank(verificationCode)) {
-                    return Response.fail(ResponseCodeEnum.PARAM_NOT_VALID.getErrorCode(), "验证码不能为空");
-                }
-
+                Preconditions.checkArgument(StringUtils.isNotBlank(verificationCode), "验证码不能为空");
                 // 构建验证码 Redis Key
                 String key = RedisKeyConst.buildVerificationCodeKey(phone);
                 // 查询存储在 Redis 中该用户的登录验证码
@@ -110,39 +113,46 @@ public class UserServiceImpl implements UserService {
     }
     @Transactional(rollbackFor = Exception.class)//原子性
     public Long registerUser(String phone) {
-        Long instaId = redisTemplate.opsForValue().increment(RedisKeyConst.INSTA_ID_GENERATOR_KEY);
-        UserDO userDO = UserDO.builder()
-                .phone(phone)
-                .instaId(String.valueOf(instaId)) // 自动生成小红书号 ID
-                .username("小红薯" + instaId) // 自动生成昵称, 如：小红薯10000
-                .status(StatusEnum.ENABLE.getValue()) // 状态为启用
-                .createTime(DateTime.now())
-                .updateTime(DateTime.now())
-                .isDeleted(DeletedEnum.NO.getValue()) // 逻辑删除
-                .build();
-        // 添加入库
-        userDOMapper.insert(userDO);
+      return transactionTemplate.execute(status ->  {
+        try {
+            Long instaId = redisTemplate.opsForValue().increment(RedisKeyConst.INSTA_ID_GENERATOR_KEY);
+            UserDO userDO = UserDO.builder()
+                    .phone(phone)
+                    .instaId(String.valueOf(instaId)) // 自动生成小红书号 ID
+                    .username("小红薯" + instaId) // 自动生成昵称, 如：小红薯10000
+                    .status(StatusEnum.ENABLE.getValue()) // 状态为启用
+                    .createTime(DateTime.now())
+                    .updateTime(DateTime.now())
+                    .isDeleted(DeletedEnum.NO.getValue()) // 逻辑删除
+                    .build();
+            // 添加入库
+            userDOMapper.insert(userDO);
+            int i = 1 / 0;
+            // 获取刚刚添加入库的用户 ID
+            Long userId = userDO.getId();
 
-        // 获取刚刚添加入库的用户 ID
-        Long userId = userDO.getId();
+            // 给该用户分配一个默认角色
+            UserRoleDO userRoleDO = UserRoleDO.builder()
+                    .userId(userId)
+                    .roleId(RoleConstants.COMMON_USER_ROLE_ID)
+                    .createTime(DateTime.now())
+                    .updateTime(DateTime.now())
+                    .isDeleted(DeletedEnum.NO.getValue())
+                    .build();
+            userRoleDOMapper.insert(userRoleDO);
 
-        // 给该用户分配一个默认角色
-        UserRoleDO userRoleDO = UserRoleDO.builder()
-                .userId(userId)
-                .roleId(RoleConstants.COMMON_USER_ROLE_ID)
-                .createTime(DateTime.now())
-                .updateTime(DateTime.now())
-                .isDeleted(DeletedEnum.NO.getValue())
-                .build();
-        userRoleDOMapper.insert(userRoleDO);
+            // 将该用户的角色 ID 存入 Redis 中
+            List<Long> roles = Lists.newArrayList();
+            roles.add(RoleConstants.COMMON_USER_ROLE_ID);
+            String userRolesKey = RedisKeyConst.buildUserRoleKey(phone);
+            redisTemplate.opsForValue().set(userRolesKey, JsonUtils.toJsonString(roles));
 
-        // 将该用户的角色 ID 存入 Redis 中
-        List<Long> roles = Lists.newArrayList();
-        roles.add(RoleConstants.COMMON_USER_ROLE_ID);
-        String userRolesKey = RedisKeyConst.buildUserRoleKey(phone);
-        redisTemplate.opsForValue().set(userRolesKey, JsonUtils.toJsonString(roles));
+            return userId;
+        } catch (Exception e) {
+            status.setRollbackOnly(); // 标记事务为回滚
+            log.error("==> 系统注册用户异常: ", e);
+            return null;
 
-        return userId;
-    }
-
-}
+        }
+    });
+}}

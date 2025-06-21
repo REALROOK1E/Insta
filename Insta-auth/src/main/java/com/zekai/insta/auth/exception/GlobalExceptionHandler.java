@@ -41,7 +41,6 @@ public class GlobalExceptionHandler {
     public Response<Object> handleMethodArgumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException e) {
         // 参数错误异常码
         String errorCode = ResponseCodeEnum.PARAM_NOT_VALID.getErrorCode();
-
         // 获取 BindingResult
         BindingResult bindingResult = e.getBindingResult();
 
@@ -79,5 +78,18 @@ public class GlobalExceptionHandler {
     public Response<Object> handleOtherException(HttpServletRequest request, Exception e) {
         log.error("{} request error, ", request.getRequestURI(), e);
         return Response.fail(ResponseCodeEnum.SYSTEM_ERROR);
+    }
+
+    @ExceptionHandler({IllegalArgumentException.class })
+    @ResponseBody
+    public Response<Object> handleillegalException(HttpServletRequest request, Exception e) {
+        // 参数错误异常码
+        String errorCode = ResponseCodeEnum.PARAM_NOT_VALID.getErrorCode();
+        // 错误信息
+        String errorMessage = e.getMessage();
+
+        log.warn("{} request error, errorCode: {}, errorMessage: {}", request.getRequestURI(), errorCode, errorMessage);
+
+        return Response.fail(errorCode, errorMessage);
     }
 }
