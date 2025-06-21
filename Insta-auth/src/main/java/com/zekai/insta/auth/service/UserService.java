@@ -8,8 +8,8 @@ import com.zekai.insta.auth.model.vo.user.UserLoginReqVO;
  * @date: 2025/6/21
  * @description:
  **/
+
 public interface UserService
 {
     Response<String> loginAndRegister(UserLoginReqVO userLoginReqVO);
-
 }

@@ -39,7 +39,7 @@ public class VerifyCodeService implements VerifyCode {
         String phone = sendVerificationCodeReqVO.getPhone();
 
         // 构建验证码 redis key
-        String key = RedisKeyConst.RedisKeyConstants.buildVerificationCodeKey(phone);
+        String key = RedisKeyConst.buildVerificationCodeKey(phone);
 
         // 判断是否已发送验证码
         boolean isSent = redisTemplate.hasKey(key);
