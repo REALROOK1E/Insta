@@ -12,5 +12,4 @@ public interface UserService
 {
     Response<String> loginAndRegister(UserLoginReqVO userLoginReqVO);
 
-    Response<String> loginAndRegister(UserLoginReqVO userLoginReqVO);
 }
