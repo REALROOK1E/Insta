@@ -1,4 +1,4 @@
-InstaVerse
+#InstaVerse
 ## Description
 
 A distributed, highly available large-scale microservices blog system, which covers a wide range of popular technology stacks and personally written components, featuring note publishing, likes, favorites, following, and more. The platform is designed to handle massive user traffic with high-concurrency read/write and strong data consistency, ensuring real-time user interactions. High availability and scalability are achieved through a distributed microservices architecture.
