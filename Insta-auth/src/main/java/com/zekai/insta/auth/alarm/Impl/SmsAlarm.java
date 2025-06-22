@@ -15,12 +15,10 @@ public class SmsAlarm implements AlarmInterface {
      * 发送告警信息
      *
      * @param message
-     * @return
      */
     @Override
-    public boolean send(String message) {
+    public void send(String message) {
         log.info("==> 【短信告警】：{}", message);
 
-        return true;
     }
 }

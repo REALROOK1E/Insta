@@ -6,5 +6,5 @@ package com.zekai.insta.auth.alarm;
  * @description:
  **/
 public interface AlarmInterface {
-    boolean send(String message);
+    void send(String message);
 }
