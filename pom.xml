@@ -20,6 +20,7 @@
   <modules>
     <module>Insta-auth</module>
     <module>Insta-framework</module>
+    <module>insta-gateway</module>
   </modules>
 
   <properties>
