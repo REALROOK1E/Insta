@@ -7,7 +7,9 @@ package com.zekai.insta.auth.constant;
  **/
 public class RedisKeyConst {
 
-        private static final String VERIFICATION_CODE_KEY_PREFIX = "verification_code:";
+
+    public static final String COMMON_USER_ROLE_ID = "不知道写啥";
+    private static final String VERIFICATION_CODE_KEY_PREFIX = "verification_code:";
         private static final String USER_ROLES_KEY_PREFIX = "user:roles:";
 
         private static final String ROLE_PERMISSIONS_KEY_PREFIX = "role:permissions:";
@@ -22,8 +24,8 @@ public class RedisKeyConst {
             return VERIFICATION_CODE_KEY_PREFIX + phone;
         }
 
-         public static String buildUserRoleKey(String phone) {
-        return USER_ROLES_KEY_PREFIX + phone;
+         public static String buildUserRoleKey(Long userId) {
+        return USER_ROLES_KEY_PREFIX + userId;
     }
 
         public static String buildRolePermissionsKey(Long roleId) {

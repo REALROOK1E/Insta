@@ -12,8 +12,10 @@ import com.zekai.framework.common.response.Response;
 import com.zekai.framework.common.util.JsonUtils;
 import com.zekai.insta.auth.constant.RedisKeyConst;
 import com.zekai.insta.auth.constant.RoleConstants;
+import com.zekai.insta.auth.domain.dataobject.RoleDO;
 import com.zekai.insta.auth.domain.dataobject.UserDO;
 import com.zekai.insta.auth.domain.dataobject.UserRoleDO;
+import com.zekai.insta.auth.domain.mapper.RoleDOMapper;
 import com.zekai.insta.auth.domain.mapper.UserDOMapper;
 import com.zekai.insta.auth.domain.mapper.UserRoleDOMapper;
 import com.zekai.insta.auth.enums.LoginType;
@@ -30,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,6 +52,8 @@ public class UserServiceImpl implements UserService {
     private UserRoleDOMapper userRoleDOMapper;
     @Autowired
     private TransactionTemplate transactionTemplate;
+    @Autowired
+    private RoleDOMapper roleDOMapper;
 
     /**
      * 登录与注册
@@ -116,6 +121,8 @@ public class UserServiceImpl implements UserService {
       return transactionTemplate.execute(status ->  {
         try {
             Long instaId = redisTemplate.opsForValue().increment(RedisKeyConst.INSTA_ID_GENERATOR_KEY);
+            log.info("电话号码是：{}", phone);
+            log.info("id是：{}", instaId);
             UserDO userDO = UserDO.builder()
                     .phone(phone)
                     .instaId(String.valueOf(instaId)) // 自动生成小红书号 ID
@@ -127,11 +134,10 @@ public class UserServiceImpl implements UserService {
                     .build();
             // 添加入库
             userDOMapper.insert(userDO);
-            int i = 1 / 0;
             // 获取刚刚添加入库的用户 ID
             Long userId = userDO.getId();
 
-            // 给该用户分配一个默认角色
+            // 给该用户构造一个对应的实体类，然后插入
             UserRoleDO userRoleDO = UserRoleDO.builder()
                     .userId(userId)
                     .roleId(RoleConstants.COMMON_USER_ROLE_ID)
@@ -141,10 +147,12 @@ public class UserServiceImpl implements UserService {
                     .build();
             userRoleDOMapper.insert(userRoleDO);
 
-            // 将该用户的角色 ID 存入 Redis 中
-            List<Long> roles = Lists.newArrayList();
-            roles.add(RoleConstants.COMMON_USER_ROLE_ID);
-            String userRolesKey = RedisKeyConst.buildUserRoleKey(phone);
+            RoleDO roleDO =roleDOMapper.selectByPrimaryKey(RoleConstants.COMMON_USER_ROLE_ID);
+            // 将该用户的角色 ID 存入 Redis 中，指定初始容量为 1，这样可以减少在扩容时的性能开销
+            List<String> roles = new ArrayList<>(1);
+            roles.add(roleDO.getRoleKey());
+
+            String userRolesKey = RedisKeyConst.buildUserRoleKey(userId);
             redisTemplate.opsForValue().set(userRolesKey, JsonUtils.toJsonString(roles));
 
             return userId;

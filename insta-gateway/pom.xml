@@ -54,6 +54,10 @@
             <version>1.39.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.zekai.framework.common</groupId>
+            <artifactId>Insta-common</artifactId>
+        </dependency>
         <!-- Sa-Token 整合 Redis （使用 jackson 序列化方式） -->
         <dependency>
             <groupId>cn.dev33</groupId>
@@ -64,6 +68,11 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

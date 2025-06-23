@@ -10,3 +10,8 @@ spring:
             - Path=/auth/**
           filters:
             - StripPrefix=1
+sa-token:
+  token-name: Authorization
+  # token前缀
+  token-prefix: Bearer
+  token-style: random-128

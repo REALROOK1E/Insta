@@ -35,7 +35,6 @@ public class UserLoginReqVO {
      * 密码
      */
     private String password;
-
     /**
      * 登录类型：手机号验证码，或者是账号密码
      */
