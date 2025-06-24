@@ -21,6 +21,7 @@
     <module>Insta-auth</module>
     <module>Insta-framework</module>
     <module>insta-gateway</module>
+    <module>Insta-framework/zekai-spring-boot-starter-jackson</module>
   </modules>
 
   <properties>
