@@ -1,4 +1,4 @@
-package com.zekai.framework.common.constrants;
+package com.zekai.framework.common.constants;
 
 import java.time.format.DateTimeFormatter;
 
