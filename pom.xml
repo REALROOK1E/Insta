@@ -98,7 +98,11 @@
         <artifactId>jackson-databind</artifactId>
         <version>${jackson.version}</version>
       </dependency>
-
+      <dependency>
+        <groupId>com.zekai</groupId>
+        <artifactId>zekai-spring-boot-starter-jackson</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+      </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
