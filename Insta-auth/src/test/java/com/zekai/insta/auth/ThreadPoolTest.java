@@ -17,11 +17,5 @@ public class ThreadPoolTest {
     @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
-    /**
-     * 测试线程池
-     */
-    @Test
-    void testSubmit() {
-        threadPoolTaskExecutor.submit(() -> log.info("Asynchronous thread"));
-    }
+
 }

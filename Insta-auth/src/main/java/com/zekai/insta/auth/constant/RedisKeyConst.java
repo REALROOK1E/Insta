@@ -28,8 +28,8 @@ public class RedisKeyConst {
         return USER_ROLES_KEY_PREFIX + userId;
     }
 
-        public static String buildRolePermissionsKey(Long roleId) {
-        return ROLE_PERMISSIONS_KEY_PREFIX + roleId;
+        public static String buildRolePermissionsKey(String roleKey) {
+        return ROLE_PERMISSIONS_KEY_PREFIX + roleKey;
     }
 
 }

@@ -41,32 +41,44 @@ public class PushRolePermissions2RedisRunner implements ApplicationRunner {
     private PermissionDOMapper permissionDOMapper;
     @Resource
     private RolePermissionDOMapper rolePermissionDOMapper;
-    // 权限同步标记 Key
-    private static final String PUSH_PERMISSION_FLAG = "push.permission.flag";
+
+    // 权限同步标记 Key，这里哪怕是我随机命名，下面的haskey也会是true，说明setnx那个语句被提前执行了？为什么
+    private static final String PUSH_PERMISSION_FLAG = "随便6415";
+
     @Override
     public void run(ApplicationArguments args) {
         log.info("==> 服务启动，开始同步角色权限数据到 Redis 中...");
-
+        //删了flag之后下面应该是false，不存在了，但是每次删除完下面这个bool都是ture
+        Boolean flagExists = redisTemplate.hasKey(PUSH_PERMISSION_FLAG);
+        log.info("[DEBUG] Redis中push.permission.flag是否存在: {}", flagExists);
+        //手动加一个key，成功了，说明我连的应该就是这个redis
+        redisTemplate.opsForValue().set("如何呢", "又能怎");
         try {
+            //用下面代码删了之后就正常了，但是我手动删就不行
+          //  redisTemplate.delete(PUSH_PERMISSION_FLAG);
             // 是否能够同步数据: 原子操作，只有在键 PUSH_PERMISSION_FLAG 不存在时，才会设置该键的值为 "1"，并设置过期时间为 1 天
+            log.info("==> 尝试获取锁，flag key: {}", PUSH_PERMISSION_FLAG);
             boolean canPushed = redisTemplate.opsForValue().setIfAbsent(PUSH_PERMISSION_FLAG, "1", 1, TimeUnit.DAYS);
-
+            log.info("==> 获取锁结果: {}", canPushed);
+            Boolean flagsts = redisTemplate.hasKey(PUSH_PERMISSION_FLAG);
+            log.info("[DEBUG] 为啥为啥Redis中push.permission.flag是否存在: {}", flagsts);
             // 如果无法同步权限数据
-            if (!canPushed) {
-                log.warn("==> 角色权限数据已经同步至 Redis 中，不再同步...");
+            if (canPushed) {
+                log.warn("==> 为啥呢？角色权限数据已经同步至 Redis 中，不再同步...");
                 return;
             }
 
             // 查询出所有角色
             List<RoleDO> roleDOS = roleDOMapper.selectEnabledList();
-
+            log.info("所有的角色列表：{}", roleDOS);
             if (CollUtil.isNotEmpty(roleDOS)) {
                 // 拿到所有角色的 ID
                 List<Long> roleIds = roleDOS.stream().map(RoleDO::getId).toList();
-
+                log.info("所有的角色id：{}", roleIds);
                 // 根据角色 ID, 批量查询出所有角色对应的权限
                 List<RolePermissionDO> rolePermissionDOS = rolePermissionDOMapper.selectByRoleIds(roleIds);
                 // 按角色 ID 分组, 每个角色 ID 对应多个权限 ID
+                log.info("分组后对应的权限id：{}", rolePermissionDOS);
                 Map<Long, List<Long>> roleIdPermissionIdsMap = rolePermissionDOS.stream().collect(
                         Collectors.groupingBy(RolePermissionDO::getRoleId,
                                 Collectors.mapping(RolePermissionDO::getPermissionId, Collectors.toList()))
@@ -79,32 +91,32 @@ public class PushRolePermissions2RedisRunner implements ApplicationRunner {
                         Collectors.toMap(PermissionDO::getId, permissionDO -> permissionDO)
                 );
 
-                // 组织 角色ID-权限 关系
-                Map<Long, List<PermissionDO>> roleIdPermissionDOMap = Maps.newHashMap();
+                // 组织 角色-权限 关系
+                Map<String, List<String>> roleKeyPermissionsMap = Maps.newHashMap();
 
                 // 循环所有角色
                 roleDOS.forEach(roleDO -> {
                     // 当前角色 ID
                     Long roleId = roleDO.getId();
+                    // 当前角色 roleKey
+                    String roleKey = roleDO.getRoleKey();
                     // 当前角色 ID 对应的权限 ID 集合
                     List<Long> permissionIds = roleIdPermissionIdsMap.get(roleId);
                     if (CollUtil.isNotEmpty(permissionIds)) {
-                        List<PermissionDO> perDOS = Lists.newArrayList();
+                        List<String> permissionKeys = Lists.newArrayList();
                         permissionIds.forEach(permissionId -> {
                             // 根据权限 ID 获取具体的权限 DO 对象
                             PermissionDO permissionDO = permissionIdDOMap.get(permissionId);
-                            if (Objects.nonNull(permissionDO)) {
-                                perDOS.add(permissionDO);
-                            }
+                            permissionKeys.add(permissionDO.getPermissionKey());
                         });
-                        roleIdPermissionDOMap.put(roleId, perDOS);
+                        roleKeyPermissionsMap.put(roleKey, permissionKeys);
                     }
                 });
 
-                // 同步至 Redis 中，方便后续网关查询鉴权使用
-                roleIdPermissionDOMap.forEach((roleId, permissionDOSlist) -> {
-                    String key = RedisKeyConst.buildRolePermissionsKey(roleId);
-                    redisTemplate.opsForValue().set(key, JsonUtils.toJsonString(permissionDOS));
+                // 同步至 Redis 中，方便后续网关查询 Redis, 用于鉴权
+                roleKeyPermissionsMap.forEach((roleKey, permissions) -> {
+                    String key = RedisKeyConst.buildRolePermissionsKey(roleKey);
+                    redisTemplate.opsForValue().set(key, JsonUtils.toJsonString(permissions));
                 });
             }
 
