@@ -71,6 +71,7 @@ public class StpInterfaceImpl implements StpInterface {
                 rolePermissionsValues.forEach(jsonValue -> {
                     try {
                         // 将 JSON 字符串转换为 List<String> 权限集合
+                        //这里有问题
                         List<String> rolePermissions = objectMapper.readValue(jsonValue, new TypeReference<>() {});
                         permissions.addAll(rolePermissions);
                     } catch (JsonProcessingException e) {
