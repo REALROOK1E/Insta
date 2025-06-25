@@ -5,6 +5,7 @@ import cn.dev33.satoken.reactor.filter.SaReactorFilter;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
  * @description: 主要就是在这鉴权逻辑
  **/
 @Configuration
+@Slf4j
 public class SaTokenConfigure {
     // 注册 Sa-Token全局过滤器
     @Bean
@@ -29,10 +31,11 @@ public class SaTokenConfigure {
                             .notMatch("/auth/verification/code/send") // 排除验证码发送接口
                             .check(r -> StpUtil.checkLogin()) // 校验是否登录
                     ;
-
+                    log.info("角色");
                     // 权限认证 -- 不同模块, 校验不同权限
                     SaRouter.match("/auth/user/logout", r -> StpUtil.checkPermission("app:note:publish"));
-                     SaRouter.match("/auth/user/logout", r -> StpUtil.checkPermission("admin"));
+                    log.info("权限");
+                     SaRouter.match("/auth/user/logout", r -> StpUtil.checkRole("admin"));
                     // SaRouter.match("/goods/**", r -> StpUtil.checkPermission("goods"));
                     // SaRouter.match("/orders/**", r -> StpUtil.checkPermission("orders"));
 

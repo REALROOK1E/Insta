@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * @author: ZeKai
@@ -56,7 +57,7 @@ public class VerifyCodeService implements VerifyCode {
         log.info("==> 手机号: {}, 已发送验证码：【{}】", phone, verificationCode);
 
         // 存储验证码到 redis, 并设置过期时间为 3 分钟
-        redisTemplate.opsForValue().set(key, verificationCode, 3, MINUTES);
+        redisTemplate.opsForValue().set(key, verificationCode, 20, SECONDS);
 
         return Response.success();
     }

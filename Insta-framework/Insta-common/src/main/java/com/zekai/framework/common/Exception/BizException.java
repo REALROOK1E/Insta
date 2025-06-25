@@ -1,10 +1,13 @@
 package com.zekai.framework.common.Exception;
 
+import lombok.Getter;
+
 /**
  * @author: ZeKai
  * @date: 2025/5/30
  * @description:
  **/
+@Getter
 public class BizException extends RuntimeException {
 
     private String errorCode;
@@ -16,11 +19,4 @@ public class BizException extends RuntimeException {
         this.errorMessage = baseExceptionInterface.getMsg();
     }
 
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
 }

@@ -43,7 +43,7 @@ public class PushRolePermissions2RedisRunner implements ApplicationRunner {
     private RolePermissionDOMapper rolePermissionDOMapper;
 
     // 权限同步标记 Key，这里哪怕是我随机命名，下面的haskey也会是true，说明setnx那个语句被提前执行了？为什么
-    private static final String PUSH_PERMISSION_FLAG = "随便6415";
+    private static final String PUSH_PERMISSION_FLAG = "这是7个锁22";
 
     @Override
     public void run(ApplicationArguments args) {
@@ -72,7 +72,7 @@ public class PushRolePermissions2RedisRunner implements ApplicationRunner {
             List<RoleDO> roleDOS = roleDOMapper.selectEnabledList();
             log.info("所有的角色列表：{}", roleDOS);
             if (CollUtil.isNotEmpty(roleDOS)) {
-                // 拿到所有角色的 ID
+                // 拿到所有角色的 ID现在只有一个1
                 List<Long> roleIds = roleDOS.stream().map(RoleDO::getId).toList();
                 log.info("所有的角色id：{}", roleIds);
                 // 根据角色 ID, 批量查询出所有角色对应的权限
@@ -83,9 +83,10 @@ public class PushRolePermissions2RedisRunner implements ApplicationRunner {
                         Collectors.groupingBy(RolePermissionDO::getRoleId,
                                 Collectors.mapping(RolePermissionDO::getPermissionId, Collectors.toList()))
                 );
-
+                //到目前一切正常
                 // 查询 APP 端所有被启用的权限
                 List<PermissionDO> permissionDOS = permissionDOMapper.selectAppEnabledList();
+                log.info("所有的权限列表：{}", permissionDOS);
                 // 权限 ID - 权限 DO
                 Map<Long, PermissionDO> permissionIdDOMap = permissionDOS.stream().collect(
                         Collectors.toMap(PermissionDO::getId, permissionDO -> permissionDO)
@@ -98,16 +99,19 @@ public class PushRolePermissions2RedisRunner implements ApplicationRunner {
                 roleDOS.forEach(roleDO -> {
                     // 当前角色 ID
                     Long roleId = roleDO.getId();
+                    log.info("角色id是：{}", roleId);
                     // 当前角色 roleKey
                     String roleKey = roleDO.getRoleKey();
+                    log.info("角色key是：{}", roleKey);
                     // 当前角色 ID 对应的权限 ID 集合
                     List<Long> permissionIds = roleIdPermissionIdsMap.get(roleId);
                     if (CollUtil.isNotEmpty(permissionIds)) {
                         List<String> permissionKeys = Lists.newArrayList();
                         permissionIds.forEach(permissionId -> {
-                            // 根据权限 ID 获取具体的权限 DO 对象
+                            // 根据权限 ID 获取具体的权限 DO 对象 好像就是这个没获取到
                             PermissionDO permissionDO = permissionIdDOMap.get(permissionId);
                             permissionKeys.add(permissionDO.getPermissionKey());
+                            log.info("==> 权限key是：{} ", permissionDO.getPermissionKey());
                         });
                         roleKeyPermissionsMap.put(roleKey, permissionKeys);
                     }
@@ -116,6 +120,7 @@ public class PushRolePermissions2RedisRunner implements ApplicationRunner {
                 // 同步至 Redis 中，方便后续网关查询 Redis, 用于鉴权
                 roleKeyPermissionsMap.forEach((roleKey, permissions) -> {
                     String key = RedisKeyConst.buildRolePermissionsKey(roleKey);
+                    log.info("==> 同步角色权限数据到 Redis 中, key: {}, 权限: {}", key, permissions);
                     redisTemplate.opsForValue().set(key, JsonUtils.toJsonString(permissions));
                 });
             }
