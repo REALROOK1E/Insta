@@ -32,11 +32,10 @@ public class SaTokenConfigure {
                     log.info("鉴权");
                     SaRouter.match("/**") // 拦截所有路由
                             .notMatch("/auth/user/login") // 排除登录接口
-                            .notMatch("/auth/verification/code/send")
-                            .notMatch("/auth/user/password/update") // 排除验证码发送接口
-                           // 校验是否登录
+                            .notMatch("/auth/verification/code/send") // 排除验证码发送接口
+                            .check(r -> StpUtil.checkLogin()) // 校验是否登录
                     ;
-                    //log.info("角色{}", StpUtil.getRoleList().toString());
+
                     // 权限认证 -- 不同模块, 校验不同权限
                     //SaRouter.match("/auth/user/logout", r -> StpUtil.checkPermission("app:note:publish"));
                     //log.info("权限{}",StpUtil.getPermissionList().toString());
@@ -47,12 +46,12 @@ public class SaTokenConfigure {
                     // 更多匹配 ...  */
                 }).setError(e -> {
                     if (e instanceof NotLoginException) { // 未登录异常
-                        return SaResult.error("未登录：" + e.getMessage());
+                        throw new NotLoginException(e.getMessage(), null, null);
                     } else if (e instanceof NotPermissionException || e instanceof NotRoleException) { // 权限不足，或不具备角色，统一抛出权限不足异常
-                        return SaResult.error("未登录：" + e.getMessage());
+                        throw new NotPermissionException(e.getMessage());
                     } else { // 其他异常，则抛出一个运行时异常
                         log.info("404了");
-                        return SaResult.error("未登录：" + e.getMessage());
+                        throw new RuntimeException(e.getMessage());
                     }
                 }  );
     }     // 异常处理方法：每次setAuth函数出现异常时进入;
