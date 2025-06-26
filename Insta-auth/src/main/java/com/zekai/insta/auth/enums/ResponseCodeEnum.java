@@ -17,7 +17,10 @@ public enum ResponseCodeEnum implements ExceptionInterface {
     SYSTEM_ERROR("Auth_00", "Whats going on?"),
     PARAM_NOT_VALID("Auth_01", "ParamErr"),
     VERIFICATION_CODE_SEND_FREQUENTLY("Auth-02", "msg sent Too frequent, try again later"),
-    VERIFICATION_CODE_ERROR("Auth_03", "验证码错误");
+    VERIFICATION_CODE_ERROR("Auth_03", "验证码错误"),
+    LOGIN_TYPE_ERROR("Auth_04", "登录类型错误"),
+    USER_NOT_FOUND("Auth_05", "该用户不存在"),
+    PHONE_OR_PASSWORD_ERROR("Auth_06", "手机号或密码错误"),
     // ----------- 业务异常状态码 -----------
     ;
 
