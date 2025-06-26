@@ -31,8 +31,7 @@ public class UserController {
     @PostMapping("/logout")
     @ApiOperationLog(description = "账号登出")
     public Response<?> logout() {
-        Long userId = LoginUserContextHolder.getUserId();
-        return userService.logout(Long.valueOf(userId));
+        return userService.logout();
     }
 
 }

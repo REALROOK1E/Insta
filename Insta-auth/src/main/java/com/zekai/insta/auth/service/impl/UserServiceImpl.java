@@ -20,6 +20,7 @@ import com.zekai.insta.auth.domain.mapper.UserDOMapper;
 import com.zekai.insta.auth.domain.mapper.UserRoleDOMapper;
 import com.zekai.insta.auth.enums.LoginType;
 import com.zekai.insta.auth.enums.ResponseCodeEnum;
+import com.zekai.insta.auth.filter.LoginUserContextHolder;
 import com.zekai.insta.auth.model.vo.user.UserLoginReqVO;
 import com.zekai.insta.auth.service.UserService;
 import jakarta.annotation.Resource;
@@ -118,8 +119,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response<?> logout(Long userId) {
+    public Response<?> logout() {
         // 退出登录 (指定用户 ID)
+        Long userId = LoginUserContextHolder.getUserId();
         StpUtil.logout(userId);
         return Response.success();
     }
