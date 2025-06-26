@@ -11,9 +11,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.zekai.framework.common.constants.Timeconsts;
 
 import java.io.IOException;
-
-import static cn.hutool.core.lang.Console.log;
-
 /**
  * @author: ZeKai
  * @date: 2025/6/26
@@ -28,14 +25,13 @@ public class HeaderUserId2ContextFilter extends OncePerRequestFilter {
                                     FilterChain chain) throws ServletException, IOException {
 
         // 从请求头中获取用户 ID
-        String userId = "1";
-        log.info("Userid{},{}",userId,request.getHeader("userId"));
+        String userId = request.getHeader(GlobalConstants.USER_ID);
         // 判断请求头中是否存在用户 ID
         if (StringUtils.isBlank(userId)) {
             chain.doFilter(request, response);
             return;
         }
-        HeaderUserId2ContextFilter.log.info("## HeaderUserId2ContextFilter, 用户 ID: {}", userId);
+        log.info("## HeaderUserId2ContextFilter, 用户 ID: {}", userId);
 
         LoginUserContextHolder.setUserId(userId);
         // 将请求和响应传递给过滤链中的下一个过滤器。
@@ -43,7 +39,7 @@ public class HeaderUserId2ContextFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
         }finally {
             LoginUserContextHolder.remove();
-            HeaderUserId2ContextFilter.log.info("===== 删除 ThreadLocal， userId: {}", userId);
+            log.info("===== 删除 ThreadLocal， userId: {}", userId);
         }
 
 

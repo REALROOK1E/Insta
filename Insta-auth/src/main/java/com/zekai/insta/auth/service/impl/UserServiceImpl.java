@@ -57,9 +57,13 @@ public class UserServiceImpl implements UserService {
     private TransactionTemplate transactionTemplate;
     @Autowired
     private RoleDOMapper roleDOMapper;
-    @Resource
-    private PasswordEncoder passwordEncoder;
 
+    /**
+     * 登录与注册
+     *
+     * @param userLoginReqVO
+     * @return
+     */
 
     @Override
     public Response<String> loginAndRegister(UserLoginReqVO userLoginReqVO) {
@@ -67,39 +71,44 @@ public class UserServiceImpl implements UserService {
         Integer type = userLoginReqVO.getType();
 
         LoginType loginTypeEnum = LoginType.valueOf(type);
-        if (Objects.isNull(loginTypeEnum)) {
-            throw new BizException(ResponseCodeEnum.LOGIN_TYPE_ERROR);
-        }
+
         Long userId = null;
 
         // 判断登录类型
         switch (loginTypeEnum) {
             case VERIFICATION_CODE: // 验证码登录
-                // 省略...
+                String verificationCode = userLoginReqVO.getCode();
 
+                // 校验入参验证码是否为空
+                Preconditions.checkArgument(StringUtils.isNotBlank(verificationCode), "验证码不能为空");
+                // 构建验证码 Redis Key
+                String key = RedisKeyConst.buildVerificationCodeKey(phone);
+                // 查询存储在 Redis 中该用户的登录验证码
+                String sentCode = (String) redisTemplate.opsForValue().get(key);
+
+                // 判断用户提交的验证码，与 Redis 中的验证码是否一致
+                if (!StringUtils.equals(verificationCode, sentCode)) {
+                    throw new BizException(ResponseCodeEnum.VERIFICATION_CODE_ERROR);
+                }
+
+                // 通过手机号查询记录
+                UserDO userDO = userDOMapper.selectByPhone(phone);
+
+                log.info("==> 用户是否注册, phone: {}, userDO: {}", phone, JsonUtils.toJsonString(userDO));
+
+                // 判断是否注册
+                if (Objects.isNull(userDO)) {
+                    // 若此用户还没有注册，系统自动注册该用户
+                    userId = registerUser(phone);
+
+                } else {
+                    // 已注册，则获取其用户 ID
+                    userId = userDO.getId();
+                }
                 break;
             case PASSWORD: // 密码登录
-                String password = userLoginReqVO.getPassword();
-                // 根据手机号查询
-                UserDO userDO1 = userDOMapper.selectByPhone(phone);
+                // todo
 
-                // 判断该手机号是否注册
-                if (Objects.isNull(userDO1)) {
-                    throw new BizException(ResponseCodeEnum.USER_NOT_FOUND);
-                }
-
-                // 拿到密文密码
-                String encodePassword = userDO1.getPassword();
-
-                // 匹配密码是否一致
-                boolean isPasswordCorrect = passwordEncoder.matches(password, encodePassword);
-
-                // 如果不正确，则抛出业务异常，提示用户名或者密码不正确
-                if (!isPasswordCorrect) {
-                    throw new BizException(ResponseCodeEnum.PHONE_OR_PASSWORD_ERROR);
-                }
-
-                userId = userDO1.getId();
                 break;
             default:
                 break;
@@ -108,12 +117,8 @@ public class UserServiceImpl implements UserService {
         // SaToken 登录用户，并返回 token 令牌
         StpUtil.login(userId);
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
-
         return Response.success(tokenInfo.tokenValue);
     }
-
-
-
 
     @Override
     public Response<?> logout() {
@@ -124,7 +129,8 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
+    @Resource
+    private PasswordEncoder passwordEncoder;
     /**
      * @param updatePasswordReqVO
      * @return
