@@ -27,7 +27,6 @@ public class HeaderUserId2ContextFilter extends OncePerRequestFilter {
         String userId = request.getHeader(GlobalConstants.USER_ID);
         // 判断请求头中是否存在用户 ID
         if (StringUtils.isBlank(userId)) {
-            // 若为空，则直接放行
             chain.doFilter(request, response);
             return;
         }

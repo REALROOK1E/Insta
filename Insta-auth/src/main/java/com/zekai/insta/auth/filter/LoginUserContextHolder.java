@@ -16,7 +16,6 @@ public class LoginUserContextHolder {
     private static final ThreadLocal<Map<String, Object>> LOGIN_USER_CONTEXT_THREAD_LOCAL
             = ThreadLocal.withInitial(HashMap::new);
 
-
     /**
      * 设置用户 ID
      *
