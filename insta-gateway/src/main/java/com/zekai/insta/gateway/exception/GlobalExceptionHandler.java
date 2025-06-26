@@ -1,4 +1,6 @@
 package com.zekai.insta.gateway.exception;
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotPermissionException;
 import com.zekai.framework.common.response.Response;
 import com.zekai.insta.gateway.enums.ResponseCodeEnum;
 import jakarta.annotation.Resource;
@@ -17,7 +19,7 @@ import reactor.core.publisher.Mono;
 /**
  * @author: ZeKai
  * @date: 2025/6/26
- * @description:
+ * @description: 说白了就是通过response拿到ex，然后判断啥类型的，返回不同的枚举，最后需要用Mono.fromSupplier把result转成json
  **/
 @Component
 @Slf4j
@@ -36,7 +38,12 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
         // 响参
         Response<?> result;
         // 根据捕获的异常类型，设置不同的响应状态码和响应消息
-        if (ex instanceof SaTokenException) { // Sa-Token 异常
+        if (ex instanceof NotLoginException) { // 未登录异常
+            // 设置 401 状态码
+            response.setStatusCode(HttpStatus.UNAUTHORIZED);
+            // 构建响应结果
+            result = Response.fail(ResponseCodeEnum.UNAUTHORIZED.getErrorCode(), "未携带 Token 令牌");
+        } else if (ex instanceof NotPermissionException) { // 无权限异常
             // 权限认证失败时，设置 401 状态码
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             // 构建响应结果

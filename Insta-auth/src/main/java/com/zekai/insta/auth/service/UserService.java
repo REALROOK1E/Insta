@@ -12,4 +12,6 @@ import com.zekai.insta.auth.model.vo.user.UserLoginReqVO;
 public interface UserService
 {
     Response<String> loginAndRegister(UserLoginReqVO userLoginReqVO);
+
+    Response<?> logout(Long userId);
 }

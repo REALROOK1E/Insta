@@ -116,6 +116,14 @@ public class UserServiceImpl implements UserService {
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
         return Response.success(tokenInfo.tokenValue);
     }
+
+    @Override
+    public Response<?> logout(Long userId) {
+        // 退出登录 (指定用户 ID)
+        StpUtil.logout(userId);
+        return Response.success();
+    }
+
     @Transactional(rollbackFor = Exception.class)//原子性
     public Long registerUser(String phone) {
       return transactionTemplate.execute(status ->  {
