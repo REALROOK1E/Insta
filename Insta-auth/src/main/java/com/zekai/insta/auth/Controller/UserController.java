@@ -2,6 +2,7 @@ package com.zekai.insta.auth.Controller;
 
 import com.zekai.framework.common.response.Response;
 import com.zekai.framework.oplog.aspect.ApiOperationLog;
+import com.zekai.insta.auth.filter.LoginUserContextHolder;
 import com.zekai.insta.auth.model.vo.user.UserLoginReqVO;
 import com.zekai.insta.auth.service.UserService;
 import jakarta.annotation.Resource;
@@ -29,7 +30,8 @@ public class UserController {
 
     @PostMapping("/logout")
     @ApiOperationLog(description = "账号登出")
-    public Response<?> logout(@RequestHeader("userId") String userId) {
+    public Response<?> logout() {
+        Long userId = LoginUserContextHolder.getUserId();
         return userService.logout(Long.valueOf(userId));
     }
 
