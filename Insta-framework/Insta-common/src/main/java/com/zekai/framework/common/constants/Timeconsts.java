@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
  **/
 public interface Timeconsts {
     public interface DateConstants {
-
         /**
          * DateTimeFormatter：年-月-日 时：分：秒
          */
