@@ -23,6 +23,8 @@
     <module>insta-gateway</module>
     <module>Insta-framework/zekai-spring-boot-starter-jackson</module>
     <module>insta-oss</module>
+      <module>insta-user</module>
+    <module>insta-user/insta-user-api</module>
   </modules>
 
   <properties>

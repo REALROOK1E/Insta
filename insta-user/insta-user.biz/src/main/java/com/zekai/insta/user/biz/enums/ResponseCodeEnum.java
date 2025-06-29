@@ -1,4 +1,4 @@
-package com.zekai.insta.auth.enums;
+package com.zekai.insta.user.biz.enums;
 
 import com.zekai.framework.common.Exception.ExceptionInterface;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.Getter;
 
 /**
  * @author: ZeKai
- * @date: 2025/6/20
+ * @date: 2025/6/29
  * @description:
  **/
 @Getter
@@ -14,13 +14,9 @@ import lombok.Getter;
 public enum ResponseCodeEnum implements ExceptionInterface {
 
     // ----------- 通用异常状态码 -----------
-    SYSTEM_ERROR("Auth_00", "Whats going on?"),
-    PARAM_NOT_VALID("Auth_01", "ParamErr"),
-    VERIFICATION_CODE_SEND_FREQUENTLY("Auth-02", "msg sent Too frequent, try again later"),
-    VERIFICATION_CODE_ERROR("Auth_03", "验证码错误"),
-    LOGIN_TYPE_ERROR("Auth_04", "登录类型错误"),
-    USER_NOT_FOUND("Auth_05", "该用户不存在"),
-    PHONE_OR_PASSWORD_ERROR("Auth_06", "手机号或密码错误"),
+    SYSTEM_ERROR("User_00", "用户错误?"),
+    PARAM_NOT_VALID("User_01", "错误参数"),
+
     // ----------- 业务异常状态码 -----------
     ;
 

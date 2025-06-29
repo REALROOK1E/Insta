@@ -1,26 +1,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!-- 指定父项目 -->
     <parent>
         <groupId>com.zekai</groupId>
-        <artifactId>insta-oss</artifactId>
+        <artifactId>insta-user</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <!-- 打包方式 -->
+    <groupId>com.zekai.insta.user.biz</groupId>
+    <artifactId>insta-user.biz</artifactId>
     <packaging>jar</packaging>
 
-    <artifactId>insta-oss-biz</artifactId>
-    <name>${project.artifactId}</name>
-    <description>对象存储业务层</description>
+    <name>insta-user.biz</name>
+    <url>http://maven.apache.org</url>
+    <description>用户服务业务模块</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.zekai.framework.common</groupId>
-            <artifactId>Insta-common</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -32,12 +31,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
         </dependency>
@@ -47,26 +40,14 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
-        <!-- 配置中心 -->
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+            <groupId>com.zekai.framework.common</groupId>
+            <artifactId>Insta-common</artifactId>
         </dependency>
-        <!-- 对象存储 Minio -->
         <dependency>
-            <groupId>io.minio</groupId>
-            <artifactId>minio</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
-
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>
-
