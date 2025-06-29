@@ -91,6 +91,10 @@
             <version>1.39.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

@@ -31,14 +31,14 @@ public class SaTokenConfigure {
                     // 登录校验
                     log.info("鉴权");
                     SaRouter.match("/**") // 拦截所有路由
-                            .notMatch("/auth/user/login") // 排除登录接口
+                            .notMatch("/auth/login") // 排除登录接口
                             .notMatch("/auth/verification/code/send")
                             .check(r -> StpUtil.checkLogin()) // 排除验证码发送接口
                            // 校验是否登录
                     ;
                     //log.info("角色{}", StpUtil.getRoleList().toString());
                     // 权限认证 -- 不同模块, 校验不同权限
-                    //SaRouter.match("/auth/user/logout", r -> StpUtil.checkPermission("app:note:publish"));
+                    SaRouter.match("/auth/logout", r -> StpUtil.checkPermission("app:note:publish"));
                     //log.info("权限{}",StpUtil.getPermissionList().toString());
                      //SaRouter.match("/auth/user/logout", r -> StpUtil.checkRole("admin"));
                     // SaRouter.match("/goods/**", r -> StpUtil.checkPermission("goods"));

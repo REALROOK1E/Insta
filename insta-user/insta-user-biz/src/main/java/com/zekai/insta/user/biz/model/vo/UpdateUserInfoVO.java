@@ -11,12 +11,12 @@ import java.time.LocalDate;
  * @date: 2025/6/29
  * @description:
  **/
-public class UpdateUserInfoVO {
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public class UpdateUserInfoReqVO {
+    public class UpdateUserInfoVO {
 
         /**
          * 头像
@@ -55,4 +55,4 @@ public class UpdateUserInfoVO {
 
     }
 
-}
+
