@@ -13,7 +13,7 @@
     <name>insta-user</name>
     <url>http://maven.apache.org</url>
     <modules>
-        <module>insta-user.biz</module>
+        <module>insta-user-biz</module>
     </modules>
 
     <properties>

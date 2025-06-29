@@ -10,7 +10,6 @@
 
     <!-- 打包方式 -->
     <packaging>jar</packaging>
-
     <artifactId>insta-oss-biz</artifactId>
     <name>${project.artifactId}</name>
     <description>对象存储业务层</description>

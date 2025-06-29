@@ -7,3 +7,7 @@ spring:
 
 storage:
   type: minio # 对象存储类型
+  
+mybatis:
+  # MyBatis xml 配置文件路径
+  mapper-locations: classpath:/mapper/**/*.xml
