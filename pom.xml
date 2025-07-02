@@ -183,6 +183,11 @@
         <artifactId>minio</artifactId>
         <version>${minio.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.zekai.insta.oss</groupId>
+        <artifactId>insta-oss-api</artifactId>
+        <version>${revision}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
