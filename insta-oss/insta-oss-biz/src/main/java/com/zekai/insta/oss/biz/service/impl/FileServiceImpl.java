@@ -1,5 +1,6 @@
 package com.zekai.insta.oss.biz.service.impl;
 import com.zekai.framework.common.response.Response;
+import com.zekai.insta.oss.api.FileFeignApi;
 import com.zekai.insta.oss.biz.service.FileService;
 import com.zekai.insta.oss.biz.strategy.FileStrategy;
 import jakarta.annotation.Resource;
@@ -15,7 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
     @Service
     @Slf4j
     public class FileServiceImpl implements FileService {
-
+    @Resource
+    private FileFeignApi fileFeignApi;
     @Resource
     private FileStrategy fileStrategy;
 

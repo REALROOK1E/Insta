@@ -3,6 +3,7 @@ package com.zekai.insta.oss.api;
 import com.zekai.framework.common.response.Response;
 import com.zekai.insta.oss.constant.ApiConstants;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.PostMapping;
 
 /**

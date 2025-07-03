@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.zekai.framework.common.response.Response;
 import com.zekai.framework.common.util.ParamUtils;
 import com.zekai.insta.context.holder.LoginUserContextHolder;
+import com.zekai.insta.oss.api.FileFeignApi;
 import com.zekai.insta.user.biz.domain.dataobject.UserDO;
 import com.zekai.insta.user.biz.domain.mapper.UserDOMapper;
 import com.zekai.insta.user.biz.enums.GenderEnum;
@@ -31,6 +32,8 @@ public class UserServiceimpl implements UserService {
     @Resource
     private UserDOMapper userDOMapper;
 
+    @Resource
+    private FileFeignApi fileFeignApi;
     /**
      * 更新用户信息
      *
@@ -50,6 +53,7 @@ public class UserServiceimpl implements UserService {
 
         if (Objects.nonNull(avatarFile)) {
             // todo: 调用对象存储服务上传文件
+            fileFeignApi.test();
         }
 
         // 昵称

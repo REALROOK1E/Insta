@@ -6,3 +6,10 @@ minio:
   accessKey: ernest
   secretKey: lzk100207
 
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/your_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: hDJph7CNmIa+N6BUMutTc9/bbKxdilgiMAjmdHfj9fTwGeY5Ed/Nlb8sy8vHI6AeAhSbHvDi+Dq+VK6nNg3x9A==
+    driver-class-name: com.mysql.cj.jdbc.Driver
+

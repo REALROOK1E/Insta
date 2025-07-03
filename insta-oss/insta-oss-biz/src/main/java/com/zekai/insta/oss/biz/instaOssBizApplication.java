@@ -10,10 +10,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  *
  */
 @SpringBootApplication
-@MapperScan("com.zekai.insta.oss.biz.domain.mapper")
-@EnableFeignClients(basePackages = "com.zekai.insta")
+@EnableFeignClients(basePackages = "com.zekai.insta.oss.api")
 public class instaOssBizApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(instaOssBizApplication.class, args);
     }
