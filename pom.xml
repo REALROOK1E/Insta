@@ -26,6 +26,7 @@
       <module>insta-user</module>
     <module>insta-user/insta-user-api</module>
     <module>Insta-framework/Insta-spring-boot-starter-biz-context</module>
+      <module>insta-kv</module>
   </modules>
 
   <properties>

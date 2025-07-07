@@ -10,6 +10,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Setter
 public class UserRoleDO {
     private Long id;
 
@@ -35,13 +36,6 @@ public class UserRoleDO {
         this.roleId = roleId;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 
     public void setIsDeleted(Boolean isDeleted) {
         this.isDeleted = isDeleted;
