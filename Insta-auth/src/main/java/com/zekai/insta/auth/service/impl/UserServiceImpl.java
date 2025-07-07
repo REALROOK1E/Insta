@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
                 if (!StringUtils.equals(verificationCode, sentCode)) {
                     throw new BizException(ResponseCodeEnum.VERIFICATION_CODE_ERROR);
                 }
-
+                log.info("到这里应该没有什么意外。。。");
                 // 通过手机号查询记录
                 Long userIdTmp = userRpcService.registerUser(phone);
 

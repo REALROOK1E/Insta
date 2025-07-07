@@ -4,6 +4,7 @@ import com.zekai.framework.common.response.Response;
 import com.zekai.insta.user.api.UserFeignApi;
 import com.zekai.insta.user.dto.req.RegisterUserReqDTO;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
  * @description:
  **/
 @Component
+@Slf4j
 public class UserRpcService {
 
     @Resource
@@ -26,9 +28,8 @@ public class UserRpcService {
     public Long registerUser(String phone) {
         RegisterUserReqDTO registerUserReqDTO = new RegisterUserReqDTO();
         registerUserReqDTO.setPhone(phone);
-
+        log.info("在rpc层也没有问题");
         Response<Long> response = userFeignApi.registerUser(registerUserReqDTO);
-
         if (!response.isSuccess()) {
             return null;
         }

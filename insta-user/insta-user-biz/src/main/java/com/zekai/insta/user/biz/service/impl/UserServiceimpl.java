@@ -160,7 +160,11 @@ public class UserServiceimpl implements UserService {
 
         // 否则注册新用户
         // 获取全局自增的小哈书 ID
-        Long instaId = redisTemplate.opsForValue().increment(RedisKeyConst.INSTA_ID_GENERATOR_KEY);
+        String key = RedisKeyConst.INSTA_ID_GENERATOR_KEY;
+        if (!redisTemplate.hasKey(key)) {
+            redisTemplate.opsForValue().set(key, 10000);
+        }
+        Long instaId = redisTemplate.opsForValue().increment(key);
 
         UserDO userDO = UserDO.builder()
                 .phone(phone)
