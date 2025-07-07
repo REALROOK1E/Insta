@@ -1,16 +1,16 @@
-package com.zekai.insta.auth.runner;
+package com.zekai.insta.user.biz.runner;
 
 import cn.hutool.core.collection.CollUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.zekai.framework.common.util.JsonUtils;
-import com.zekai.insta.auth.constant.RedisKeyConst;
-import com.zekai.insta.auth.domain.dataobject.PermissionDO;
-import com.zekai.insta.auth.domain.dataobject.RoleDO;
-import com.zekai.insta.auth.domain.dataobject.RolePermissionDO;
-import com.zekai.insta.auth.domain.mapper.PermissionDOMapper;
-import com.zekai.insta.auth.domain.mapper.RoleDOMapper;
-import com.zekai.insta.auth.domain.mapper.RolePermissionDOMapper;
+import com.zekai.insta.user.biz.constant.RedisKeyConst;
+import com.zekai.insta.user.biz.domain.dataobject.PermissionDO;
+import com.zekai.insta.user.biz.domain.dataobject.RoleDO;
+import com.zekai.insta.user.biz.domain.dataobject.RolePermissionDO;
+import com.zekai.insta.user.biz.domain.mapper.PermissionDOMapper;
+import com.zekai.insta.user.biz.domain.mapper.RoleDOMapper;
+import com.zekai.insta.user.biz.domain.mapper.RolePermissionDOMapper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -20,12 +20,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * @author: ZeKai
+ * @user.bizor: ZeKai
  * @date: 2025/6/21
  * @description: 在 Spring Boot 启动时，把所有角色的权限数据查出来，按角色分组，序列化后存到 Redis，方便后续网关鉴权用。
  **/
