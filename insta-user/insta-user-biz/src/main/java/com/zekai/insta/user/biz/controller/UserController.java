@@ -3,7 +3,10 @@ import com.zekai.framework.common.response.Response;
 import com.zekai.framework.oplog.aspect.ApiOperationLog;
 import com.zekai.insta.user.biz.model.vo.UpdateUserInfoVO;
 import com.zekai.insta.user.biz.service.UserService;
+import com.zekai.insta.user.dto.req.FindUserByPhoneReqDTO;
 import com.zekai.insta.user.dto.req.RegisterUserReqDTO;
+import com.zekai.insta.user.dto.req.UpdateUserPasswordReqDTO;
+import com.zekai.insta.user.dto.resp.FindUserByPhoneRspDTO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -39,4 +42,17 @@ public class UserController {
     public Response<Long> register(@Validated @RequestBody RegisterUserReqDTO registerUserReqDTO) {
         return userService.register(registerUserReqDTO);
     }
+
+    @PostMapping("/findByPhone")
+    @ApiOperationLog(description = "手机号查询用户信息")
+    public Response<FindUserByPhoneRspDTO> findByPhone(@Validated @RequestBody FindUserByPhoneReqDTO findUserByPhoneReqDTO) {
+        return userService.findByPhone(findUserByPhoneReqDTO);
+    }
+
+    @PostMapping("/password/update")
+    @ApiOperationLog(description = "密码更新")
+    public Response<?> updatePassword(@Validated @RequestBody UpdateUserPasswordReqDTO updateUserPasswordReqDTO) {
+        return userService.updatePassword(updateUserPasswordReqDTO);
+    }
+
 }

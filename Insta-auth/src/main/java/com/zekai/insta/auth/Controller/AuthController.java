@@ -2,10 +2,9 @@ package com.zekai.insta.auth.Controller;
 
 import com.zekai.framework.common.response.Response;
 import com.zekai.framework.oplog.aspect.ApiOperationLog;
-import com.zekai.insta.auth.filter.LoginUserContextHolder;
 import com.zekai.insta.auth.model.vo.user.UpdatePasswordReqVO;
 import com.zekai.insta.auth.model.vo.user.UserLoginReqVO;
-import com.zekai.insta.auth.service.UserService;
+import com.zekai.insta.auth.service.AuthService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -18,9 +17,9 @@ import org.springframework.web.bind.annotation.*;
  **/
 @RestController
 @Slf4j
-public class UserController {
+public class AuthController {
     @Resource
-    private UserService userService;
+    private AuthService userService;
 
     @PostMapping("/login")
     @ApiOperationLog(description = "用户登录/注册")

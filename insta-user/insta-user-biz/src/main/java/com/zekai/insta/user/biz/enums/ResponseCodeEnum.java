@@ -18,8 +18,10 @@ public enum ResponseCodeEnum implements ExceptionInterface {
     PARAM_NOT_VALID("User_01", "错误参数"),
     SEX_VALID_FAIL("User_03", "武装直升机"),
     INTRODUCTION_VALID_FAIL("User_04", "你没有那么丰富，也没有那么匮乏"),
-    INSTA_ID_VALID_FAIL("User_05","id错了" ), NICK_NAME_VALID_FAIL("0","000" );
+    INSTA_ID_VALID_FAIL("User_05","id错了" ), NICK_NAME_VALID_FAIL("0","000" ),
+    USER_NOT_FOUND("USER-07", "该用户不存在"),
 
+    ;
     // 异常码
     private final String errorCode;
     // 错误信息

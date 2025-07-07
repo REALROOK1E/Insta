@@ -2,7 +2,10 @@ package com.zekai.insta.user.api;
 
 import com.zekai.framework.common.response.Response;
 import com.zekai.insta.user.constant.ApiConstants;
+import com.zekai.insta.user.dto.req.FindUserByPhoneReqDTO;
 import com.zekai.insta.user.dto.req.RegisterUserReqDTO;
+import com.zekai.insta.user.dto.req.UpdateUserPasswordReqDTO;
+import com.zekai.insta.user.dto.resp.FindUserByPhoneRspDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,5 +28,12 @@ public interface UserFeignApi {
      */
     @PostMapping(value = PREFIX + "/register")
     Response<Long> registerUser(@RequestBody RegisterUserReqDTO registerUserReqDTO);
+    /*
+    这个叫做封装客户端接口
+     */
+    @PostMapping(value = PREFIX + "/findByPhone")
+    Response<FindUserByPhoneRspDTO> findByPhone(@RequestBody FindUserByPhoneReqDTO findUserByPhoneReqDTO);
 
+    @PostMapping(value = PREFIX + "/password/update")
+    Response<?> updatePassword(@RequestBody UpdateUserPasswordReqDTO updateUserPasswordReqDTO);
 }

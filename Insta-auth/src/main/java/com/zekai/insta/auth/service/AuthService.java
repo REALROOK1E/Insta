@@ -10,11 +10,12 @@ import com.zekai.insta.auth.model.vo.user.UserLoginReqVO;
  * @description:
  **/
 
-public interface UserService
+public interface AuthService
 {
     Response<String> loginAndRegister(UserLoginReqVO userLoginReqVO);
 
     Response<?> logout();
 
     Response<?> updatePassword(UpdatePasswordReqVO updatePasswordReqVO);
+
 }

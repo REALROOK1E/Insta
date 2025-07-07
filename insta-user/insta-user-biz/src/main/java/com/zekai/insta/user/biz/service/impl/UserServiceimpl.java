@@ -1,6 +1,7 @@
 package com.zekai.insta.user.biz.service.impl;
 
 import com.google.common.base.Preconditions;
+import com.zekai.framework.common.Exception.BizException;
 import com.zekai.framework.common.enums.DeletedEnum;
 import com.zekai.framework.common.enums.StatusEnum;
 import com.zekai.framework.common.response.Response;
@@ -21,8 +22,11 @@ import com.zekai.insta.user.biz.enums.GenderEnum;
 import com.zekai.insta.user.biz.enums.ResponseCodeEnum;
 import com.zekai.insta.user.biz.model.vo.UpdateUserInfoVO;
 import com.zekai.insta.user.biz.service.UserService;
+import com.zekai.insta.user.dto.req.FindUserByPhoneReqDTO;
 import com.zekai.insta.user.dto.req.RegisterUserReqDTO;
 
+import com.zekai.insta.user.dto.req.UpdateUserPasswordReqDTO;
+import com.zekai.insta.user.dto.resp.FindUserByPhoneRspDTO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -102,7 +106,7 @@ public class UserServiceimpl implements UserService {
         Integer sex = updateUserInfoReqVO.getSex();
         if (Objects.nonNull(sex)) {
             Preconditions.checkArgument(GenderEnum.isValid(sex), ResponseCodeEnum.SEX_VALID_FAIL.getErrorMessage());
-            userDO.setSex(sex);
+            userDO.setSex(sex.byteValue());
             needUpdate = true;
         }
 
@@ -203,4 +207,56 @@ public class UserServiceimpl implements UserService {
 
         return Response.success(userId);
     }
+
+
+
+    /**
+     * 根据手机号查询用户信息
+     *
+     * @param findUserByPhoneReqDTO
+     * @return
+     */
+    @Override
+    public Response<FindUserByPhoneRspDTO> findByPhone(FindUserByPhoneReqDTO findUserByPhoneReqDTO) {
+        String phone = findUserByPhoneReqDTO.getPhone();
+
+        // 根据手机号查询用户信息
+        UserDO userDO = userDOMapper.selectByPhone(phone);
+
+        // 判空
+        if (Objects.isNull(userDO)) {
+            throw new BizException(ResponseCodeEnum.USER_NOT_FOUND);
+        }
+
+        // 构建返参
+        FindUserByPhoneRspDTO findUserByPhoneRspDTO = FindUserByPhoneRspDTO.builder()
+                .id(userDO.getId())
+                .password(userDO.getPassword())
+                .build();
+
+        return Response.success(findUserByPhoneRspDTO);
+    }
+
+    /**
+     * 更新密码
+     *
+     * @param updateUserPasswordReqDTO
+     * @return
+     */
+    @Override
+    public Response<?> updatePassword(UpdateUserPasswordReqDTO updateUserPasswordReqDTO) {
+        // 获取当前请求对应的用户 ID
+        Long userId = LoginUserContextHolder.getUserId();
+
+        UserDO userDO = UserDO.builder()
+                .id(userId)
+                .password(updateUserPasswordReqDTO.getEncodePassword()) // 加密后的密码
+                .updateTime(LocalDateTime.now())
+                .build();
+        // 更新密码
+        userDOMapper.updateByPrimaryKeySelective(userDO);
+
+        return Response.success();
+    }
+
 }
