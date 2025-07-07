@@ -194,7 +194,11 @@
         <artifactId>insta-user-api</artifactId>
         <version>${revision}</version>
       </dependency>
-
+      <dependency>
+        <groupId>com.zekai.insta.kv</groupId>
+        <artifactId>insta-kv-api</artifactId>
+        <version>${revision}</version>
+      </dependency>
     </dependencies>
 
   </dependencyManagement>
