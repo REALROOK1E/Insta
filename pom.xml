@@ -27,6 +27,8 @@
     <module>insta-user/insta-user-api</module>
     <module>Insta-framework/Insta-spring-boot-starter-biz-context</module>
       <module>insta-kv</module>
+      <module>insta-distributed-id-generator</module>
+      <module>insta-note</module>
   </modules>
 
   <properties>
@@ -197,6 +199,11 @@
       <dependency>
         <groupId>com.zekai.insta.kv</groupId>
         <artifactId>insta-kv-api</artifactId>
+        <version>${revision}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.zekai.insta.distributed.id.generator.api</groupId>
+        <artifactId>insta-distributed-id-generator-api</artifactId>
         <version>${revision}</version>
       </dependency>
     </dependencies>

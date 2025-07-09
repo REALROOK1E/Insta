@@ -15,6 +15,12 @@
     <file url="file://$PROJECT_DIR$/Insta-framework/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Insta-framework/zekai-spring-boot-starter-jackson/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Insta-framework/zekai-spring-boot-starter-jackson/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-distributed-id-generator/insta-distributed-id-generator-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-distributed-id-generator/insta-distributed-id-generator-api/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-distributed-id-generator/insta-distributed-id-generator-biz/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-distributed-id-generator/insta-distributed-id-generator-biz/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-distributed-id-generator/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-distributed-id-generator/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/insta-gateway/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/insta-gateway/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/insta-kv/insta-kv-api/src/main/java" charset="UTF-8" />
@@ -23,6 +29,12 @@
     <file url="file://$PROJECT_DIR$/insta-kv/insta-kv-biz/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/insta-kv/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/insta-kv/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-note/insta-note-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-note/insta-note-api/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-note/insta-note-biz/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-note/insta-note-biz/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-note/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-note/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/insta-oss/insta-oss-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/insta-oss/insta-oss-api/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/insta-oss/insta-oss-biz/src/main/java" charset="UTF-8" />

@@ -131,6 +131,10 @@
             <groupId>com.zekai.insta.user.api</groupId>
             <artifactId>insta-user-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.zekai.insta.distributed.id.generator.api</groupId>
+            <artifactId>insta-distributed-id-generator-api</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

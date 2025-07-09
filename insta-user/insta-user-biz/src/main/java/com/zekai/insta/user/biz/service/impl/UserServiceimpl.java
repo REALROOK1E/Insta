@@ -21,6 +21,7 @@ import com.zekai.insta.user.biz.domain.mapper.UserRoleDOMapper;
 import com.zekai.insta.user.biz.enums.GenderEnum;
 import com.zekai.insta.user.biz.enums.ResponseCodeEnum;
 import com.zekai.insta.user.biz.model.vo.UpdateUserInfoVO;
+import com.zekai.insta.user.biz.rpc.DistributedIdGeneratorRpcService;
 import com.zekai.insta.user.biz.service.UserService;
 import com.zekai.insta.user.dto.req.FindUserByPhoneReqDTO;
 import com.zekai.insta.user.dto.req.RegisterUserReqDTO;
@@ -63,7 +64,8 @@ public class UserServiceimpl implements UserService {
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
-
+    @Resource
+    private DistributedIdGeneratorRpcService distributedIdGeneratorRpcService;
     /**
      * 更新用户信息
      *
@@ -159,6 +161,7 @@ public class UserServiceimpl implements UserService {
 
         // 若已注册，则直接返回用户 ID
         if (Objects.nonNull(userDO1)) {
+
             return Response.success(userDO1.getId());
         }
 
@@ -168,7 +171,7 @@ public class UserServiceimpl implements UserService {
         if (!redisTemplate.hasKey(key)) {
             redisTemplate.opsForValue().set(key, 10000);
         }
-        Long instaId = redisTemplate.opsForValue().increment(key);
+        String instaId = distributedIdGeneratorRpcService.getXiaohashuId();
 
         UserDO userDO = UserDO.builder()
                 .phone(phone)

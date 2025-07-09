@@ -42,7 +42,6 @@ public class UserController {
     public Response<Long> register(@Validated @RequestBody RegisterUserReqDTO registerUserReqDTO) {
         return userService.register(registerUserReqDTO);
     }
-
     @PostMapping("/findByPhone")
     @ApiOperationLog(description = "手机号查询用户信息")
     public Response<FindUserByPhoneRspDTO> findByPhone(@Validated @RequestBody FindUserByPhoneReqDTO findUserByPhoneReqDTO) {

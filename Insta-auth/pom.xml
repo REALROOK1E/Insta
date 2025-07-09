@@ -109,6 +109,12 @@
             <groupId>com.zekai.insta.user.api</groupId>
             <artifactId>insta-user-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.2.23</version>
+            <scope>compile</scope>
+        </dependency>
 
 
     </dependencies>

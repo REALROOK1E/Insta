@@ -74,12 +74,16 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+
         <!-- Redis -->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
+
         <!-- Jackson 组件 -->
+
         <dependency>
             <groupId>com.zekai</groupId>
             <artifactId>zekai-spring-boot-starter-jackson</artifactId>
@@ -96,6 +100,7 @@
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
