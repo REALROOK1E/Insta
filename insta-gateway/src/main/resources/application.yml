@@ -14,7 +14,12 @@ spring:
           uri: lb://insta-user
           predicates:
                - Path=/user/**
-
+        - id: note
+          uri: lb://insta-note
+          predicates:
+              - Path=/note/**
+          filters:
+              - StripPrefix=1
 sa-token:
   token-name: Authorization
   # token前缀
