@@ -1,6 +1,8 @@
 package com.zekai.insta.note.biz.service;
 
 import com.zekai.framework.common.response.Response;
+import com.zekai.insta.note.biz.model.vo.FindNoteDetailReqVO;
+import com.zekai.insta.note.biz.model.vo.FindNoteDetailRspVO;
 import com.zekai.insta.note.biz.model.vo.PublishNoteReqVO;
 
 /**
@@ -17,4 +19,5 @@ public interface NoteService {
      */
     Response<?> publishNote(PublishNoteReqVO publishNoteReqVO);
 
+    Response<FindNoteDetailRspVO> findNoteDetail(FindNoteDetailReqVO findNoteDetailReqVO);
 }

@@ -104,7 +104,10 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-redis</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.zekai.insta.user.api</groupId>
+            <artifactId>insta-user-api</artifactId>
+        </dependency>
     </dependencies>
 <build>
     <plugins>

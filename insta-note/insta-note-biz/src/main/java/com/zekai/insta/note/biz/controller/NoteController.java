@@ -1,6 +1,8 @@
 package com.zekai.insta.note.biz.controller;
 import com.zekai.framework.common.response.Response;
 import com.zekai.framework.oplog.aspect.ApiOperationLog;
+import com.zekai.insta.note.biz.model.vo.FindNoteDetailReqVO;
+import com.zekai.insta.note.biz.model.vo.FindNoteDetailRspVO;
 import com.zekai.insta.note.biz.model.vo.PublishNoteReqVO;
 import com.zekai.insta.note.biz.service.NoteService;
 import jakarta.annotation.Resource;
@@ -29,5 +31,9 @@ public class NoteController {
     public Response<?> publishNote(@Validated @RequestBody PublishNoteReqVO publishNoteReqVO) {
         return noteService.publishNote(publishNoteReqVO);
     }
-
+    @PostMapping(value = "/detail")
+    @ApiOperationLog(description = "笔记详情")
+    public Response<FindNoteDetailRspVO> findNoteDetail(@Validated @RequestBody FindNoteDetailReqVO findNoteDetailReqVO) {
+        return noteService.findNoteDetail(findNoteDetailReqVO);
+    }
 }

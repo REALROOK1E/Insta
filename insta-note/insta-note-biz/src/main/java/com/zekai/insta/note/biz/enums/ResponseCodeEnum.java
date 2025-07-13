@@ -18,6 +18,8 @@ public enum ResponseCodeEnum implements ExceptionInterface {
     PARAM_NOT_VALID("NOTE-10001", "参数错误"),
     NOTE_TYPE_ERROR("NOTE-20000", "未知的笔记类型"),
     NOTE_PUBLISH_FAIL("NOTE-20001", "笔记发布失败"),
+    NOTE_NOT_FOUND("NOTE-20002", "笔记不存在"),
+    NOTE_PRIVATE("NOTE-20003", "作者已将该笔记设置为仅自己可见"),
 
     // ----------- 业务异常状态码 -----------
     ;

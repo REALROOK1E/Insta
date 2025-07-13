@@ -3,6 +3,8 @@ import com.zekai.framework.common.response.Response;
 import com.zekai.insta.kv.api.KeyValueFeignApi;
 import com.zekai.insta.kv.dto.req.AddNoteContentReqDTO;
 import com.zekai.insta.kv.dto.req.DeleteNoteContentReqDTO;
+import com.zekai.insta.kv.dto.req.FindNoteContentReqDTO;
+import com.zekai.insta.kv.dto.rsp.FindNoteContentRspDTO;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
@@ -58,6 +60,21 @@ public class KeyValueRpcService {
         }
 
         return true;
+    }
+
+
+
+    public String findNoteContent(String uuid) {
+        FindNoteContentReqDTO findNoteContentReqDTO = new FindNoteContentReqDTO();
+        findNoteContentReqDTO.setUuid(uuid);
+
+        Response<FindNoteContentRspDTO> response = keyValueFeignApi.findNoteContent(findNoteContentReqDTO);
+
+        if (Objects.isNull(response) || !response.isSuccess() || Objects.isNull(response.getData())) {
+            return null;
+        }
+
+        return response.getData().getContent();
     }
 
 }
