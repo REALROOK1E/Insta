@@ -1,10 +1,8 @@
 package com.zekai.insta.kv.dto.req;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 /**
  * @author: ZeKai
  * @date: 2025/7/8
@@ -14,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Setter
 public class AddNoteContentReqDTO {
 
     @NotBlank(message = "笔记内容 UUID 不能为空")

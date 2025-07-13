@@ -15,7 +15,12 @@
     <modules>
         <module>insta-user-biz</module>
     </modules>
-
+<dependencies>
+    <dependency>
+    <groupId>com.github.ben-manes.caffeine</groupId>
+    <artifactId>caffeine</artifactId>
+</dependency>
+</dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

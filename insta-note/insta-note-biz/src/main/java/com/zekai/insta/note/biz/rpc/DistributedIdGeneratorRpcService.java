@@ -19,8 +19,8 @@ public class DistributedIdGeneratorRpcService {
      *
      * @return
      */
-    public String getSnowflakeId() {
-        return distributedIdGeneratorFeignApi.getSegmentId("test");
+    public String getSegmentId() {
+        return distributedIdGeneratorFeignApi.getSegmentId("leaf-segment-test");
     }
 
 }

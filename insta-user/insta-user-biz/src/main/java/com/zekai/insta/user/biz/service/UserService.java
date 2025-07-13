@@ -2,9 +2,11 @@ package com.zekai.insta.user.biz.service;
 
 import com.zekai.framework.common.response.Response;
 import com.zekai.insta.user.biz.model.vo.UpdateUserInfoVO;
+import com.zekai.insta.user.dto.req.FindUserByIdReqDTO;
 import com.zekai.insta.user.dto.req.FindUserByPhoneReqDTO;
 import com.zekai.insta.user.dto.req.RegisterUserReqDTO;
 import com.zekai.insta.user.dto.req.UpdateUserPasswordReqDTO;
+import com.zekai.insta.user.dto.resp.FindUserByIdRspDTO;
 import com.zekai.insta.user.dto.resp.FindUserByPhoneRspDTO;
 
 /**
@@ -39,4 +41,6 @@ public interface UserService {
      * @return
      */
     Response<?> updatePassword(UpdateUserPasswordReqDTO updateUserPasswordReqDTO);
+
+    Response<FindUserByIdRspDTO> findById(FindUserByIdReqDTO findUserByIdReqDTO);
 }

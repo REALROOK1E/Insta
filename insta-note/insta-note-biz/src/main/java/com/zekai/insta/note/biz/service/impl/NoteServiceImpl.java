@@ -97,7 +97,7 @@ public class NoteServiceImpl implements NoteService {
         }
 
         // RPC: 调用分布式 ID 生成服务，生成笔记 ID
-        String snowflakeIdId = distributedIdGeneratorRpcService.getSnowflakeId();
+        String snowflakeIdId = distributedIdGeneratorRpcService.getSegmentId();
         // 笔记内容 UUID
         String contentUuid = null;
 
@@ -112,7 +112,6 @@ public class NoteServiceImpl implements NoteService {
             contentUuid = UUID.randomUUID().toString();
             // RPC: 调用 KV 键值服务，存储短文本
             boolean isSavedSuccess = keyValueRpcService.saveNoteContent(contentUuid, content);
-
             // 若存储失败，抛出业务异常，提示用户发布笔记失败
             if (!isSavedSuccess) {
                 throw new BizException(ResponseCodeEnum.NOTE_PUBLISH_FAIL);

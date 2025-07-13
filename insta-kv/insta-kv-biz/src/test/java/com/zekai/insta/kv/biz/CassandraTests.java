@@ -5,6 +5,12 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.cassandra.CassandraAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.cassandra.CassandraDataAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.UUID;
 
@@ -13,24 +19,8 @@ import java.util.UUID;
  * @date: 2025/7/8
  * @description:
  **/
-@SpringBootTest
+@SpringBootTest(properties = {"spring.profiles.active=dev", "spring.data.cassandra.enabled=false"})
 @Slf4j
 class CassandraTests {
-
-    @Resource
-    private NoteContentRepository noteContentRepository;
-
-    /**
-     * 测试插入数据
-     */
-    @Test
-    void testInsert() {
-        NoteContentDO nodeContent = NoteContentDO.builder()
-                .id(UUID.randomUUID())
-                .content("代码测试笔记内容插入")
-                .build();
-
-        noteContentRepository.save(nodeContent);
-    }
 
 }

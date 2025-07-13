@@ -12,15 +12,18 @@ import org.springframework.data.cassandra.config.AbstractCassandraConfiguration;
  * @description:
  **/
 @Configuration
+@org.springframework.boot.autoconfigure.condition.ConditionalOnProperty(
+    prefix = "spring.data.cassandra", name = "enabled", havingValue = "true", matchIfMissing = true
+)
 public class CassandraConfig extends AbstractCassandraConfiguration {
 
-    @Value("${spring.cassandra.keyspace-name}")
+    @Value("${spring.data.cassandra.keyspace-name}")
     private String keySpace;
 
-    @Value("${spring.cassandra.contact-points}")
+    @Value("${spring.data.cassandra.contact-points}")
     private String contactPoints;
 
-    @Value("${spring.cassandra.port}")
+    @Value("${spring.data.cassandra.port}")
     private int port;
 
     /*

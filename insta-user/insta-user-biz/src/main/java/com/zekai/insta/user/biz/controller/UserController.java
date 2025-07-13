@@ -3,9 +3,11 @@ import com.zekai.framework.common.response.Response;
 import com.zekai.framework.oplog.aspect.ApiOperationLog;
 import com.zekai.insta.user.biz.model.vo.UpdateUserInfoVO;
 import com.zekai.insta.user.biz.service.UserService;
+import com.zekai.insta.user.dto.req.FindUserByIdReqDTO;
 import com.zekai.insta.user.dto.req.FindUserByPhoneReqDTO;
 import com.zekai.insta.user.dto.req.RegisterUserReqDTO;
 import com.zekai.insta.user.dto.req.UpdateUserPasswordReqDTO;
+import com.zekai.insta.user.dto.resp.FindUserByIdRspDTO;
 import com.zekai.insta.user.dto.resp.FindUserByPhoneRspDTO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,12 @@ public class UserController {
     @Resource
     private UserService userService;
 
+
+    @PostMapping("/findById")
+    @ApiOperationLog(description = "查询用户信息")
+    public Response<FindUserByIdRspDTO> findById(@Validated @RequestBody FindUserByIdReqDTO findUserByIdReqDTO) {
+        return userService.findById(findUserByIdReqDTO);
+    }
     /**
      * 用户信息修改
      *

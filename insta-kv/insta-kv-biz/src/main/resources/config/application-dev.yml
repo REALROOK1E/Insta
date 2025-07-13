@@ -1,7 +1,8 @@
-
 spring:
-  cassandra:
-     keyspace-name: xiaohashu
-     contact-points: 127.0.0.1
-     port: 9042
-     schema-action: create-if-not-exists
+  data:
+    cassandra:
+      keyspace-name: xiaohashu
+      contact-points: 127.0.0.1
+      port: 9042
+      local-datacenter: datacenter1
+      schema-action: create-if-not-exists

@@ -46,6 +46,7 @@ public class KeyValueRpcService {
      * @param uuid
      * @return
      */
+
     public boolean deleteNoteContent(String uuid) {
         DeleteNoteContentReqDTO deleteNoteContentReqDTO = new DeleteNoteContentReqDTO();
         deleteNoteContentReqDTO.setUuid(uuid);
