@@ -4,6 +4,9 @@ import com.zekai.framework.common.response.Response;
 import com.zekai.insta.note.biz.model.vo.FindNoteDetailReqVO;
 import com.zekai.insta.note.biz.model.vo.FindNoteDetailRspVO;
 import com.zekai.insta.note.biz.model.vo.PublishNoteReqVO;
+import com.zekai.insta.note.biz.model.vo.UpdateNoteReqVO;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author: ZeKai
@@ -19,5 +22,12 @@ public interface NoteService {
      */
     Response<?> publishNote(PublishNoteReqVO publishNoteReqVO);
 
-    Response<FindNoteDetailRspVO> findNoteDetail(FindNoteDetailReqVO findNoteDetailReqVO);
+    Response<FindNoteDetailRspVO> findNoteDetail(FindNoteDetailReqVO findNoteDetailReqVO) throws ExecutionException, InterruptedException;
+
+    Response<?> updateNote(UpdateNoteReqVO updateNoteReqVO);
+    /**
+     * 删除本地笔记缓存
+     * @param noteId
+     */
+    void deleteNoteLocalCache(Long noteId);
 }

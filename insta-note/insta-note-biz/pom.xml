@@ -108,6 +108,16 @@
             <groupId>com.zekai.insta.user.api</groupId>
             <artifactId>insta-user-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+        <!-- Rocket MQ -->
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-spring-boot-starter</artifactId>
+        </dependency>
+
     </dependencies>
 <build>
     <plugins>
