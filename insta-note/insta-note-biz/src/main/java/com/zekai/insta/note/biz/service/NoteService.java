@@ -1,10 +1,7 @@
 package com.zekai.insta.note.biz.service;
 
 import com.zekai.framework.common.response.Response;
-import com.zekai.insta.note.biz.model.vo.FindNoteDetailReqVO;
-import com.zekai.insta.note.biz.model.vo.FindNoteDetailRspVO;
-import com.zekai.insta.note.biz.model.vo.PublishNoteReqVO;
-import com.zekai.insta.note.biz.model.vo.UpdateNoteReqVO;
+import com.zekai.insta.note.biz.model.vo.*;
 
 import java.util.concurrent.ExecutionException;
 
@@ -30,4 +27,5 @@ public interface NoteService {
      * @param noteId
      */
     void deleteNoteLocalCache(Long noteId);
+    Response<?> deleteNote(DeleteNoteReqVO deleteNoteReqVO);
 }

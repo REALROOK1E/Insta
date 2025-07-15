@@ -1,10 +1,7 @@
 package com.zekai.insta.note.biz.controller;
 import com.zekai.framework.common.response.Response;
 import com.zekai.framework.oplog.aspect.ApiOperationLog;
-import com.zekai.insta.note.biz.model.vo.FindNoteDetailReqVO;
-import com.zekai.insta.note.biz.model.vo.FindNoteDetailRspVO;
-import com.zekai.insta.note.biz.model.vo.PublishNoteReqVO;
-import com.zekai.insta.note.biz.model.vo.UpdateNoteReqVO;
+import com.zekai.insta.note.biz.model.vo.*;
 import com.zekai.insta.note.biz.service.NoteService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -44,4 +41,11 @@ public class NoteController {
     public Response<?> updateNote(@Validated @RequestBody UpdateNoteReqVO updateNoteReqVO) {
         return noteService.updateNote(updateNoteReqVO);
     }
+
+    @PostMapping(value = "/delete")
+    @ApiOperationLog(description = "删除笔记")
+    public Response<?> deleteNote(@Validated @RequestBody DeleteNoteReqVO deleteNoteReqVO) {
+        return noteService.deleteNote(deleteNoteReqVO);
+    }
+
 }
