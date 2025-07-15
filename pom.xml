@@ -29,6 +29,7 @@
       <module>insta-kv</module>
       <module>insta-distributed-id-generator</module>
       <module>insta-note</module>
+    <module>insta-user-relation</module>
   </modules>
 
   <properties>

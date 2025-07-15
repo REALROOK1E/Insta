@@ -20,6 +20,13 @@ spring:
               - Path=/note/**
           filters:
               - StripPrefix=1
+        - id: user-relation
+          uri: lb://insta-user-relation
+          predicates:
+              - Path=/relation/**
+          filters:
+              - StripPrefix=1
+
 sa-token:
   token-name: Authorization
   # token前缀
