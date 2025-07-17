@@ -20,6 +20,8 @@ public enum LuaResultEnum {
     ALREADY_FOLLOWED(-3L),
     // 关注成功
     FOLLOW_SUCCESS(0L),
+    NOT_FOLLOWED(-4L),
+
     ;
 
     private final Long code;
