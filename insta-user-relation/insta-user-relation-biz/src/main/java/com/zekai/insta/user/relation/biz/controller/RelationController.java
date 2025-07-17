@@ -1,6 +1,9 @@
 package com.zekai.insta.user.relation.biz.controller;
+import com.zekai.framework.common.response.PageResponse;
 import com.zekai.framework.common.response.Response;
 import com.zekai.framework.oplog.aspect.ApiOperationLog;
+import com.zekai.insta.user.relation.biz.model.vo.FindFollowingListReqVO;
+import com.zekai.insta.user.relation.biz.model.vo.FindFollowingUserRspVO;
 import com.zekai.insta.user.relation.biz.model.vo.FollowUserReqVO;
 import com.zekai.insta.user.relation.biz.model.vo.UnfollowUserReqVO;
 import com.zekai.insta.user.relation.biz.service.RelationService;
@@ -34,4 +37,10 @@ public class RelationController {
         return relationService.follow(followUserReqVO);
     }
 
+    // 省略...
+    @PostMapping("/following/list")
+    @ApiOperationLog(description = "查询用户关注列表")
+    public PageResponse<FindFollowingUserRspVO> findFollowingList(@Validated @RequestBody FindFollowingListReqVO findFollowingListReqVO) {
+        return relationService.findFollowingList(findFollowingListReqVO);
+    }
 }

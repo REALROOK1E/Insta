@@ -29,4 +29,8 @@ public class FindUserByIdRspDTO {
      * 头像
      */
     private String avatar;
+
+    public String getIntroduction() {
+        return "intro";
+    }
 }
