@@ -20,4 +20,7 @@ public class RedisKeyConstants {
         return USER_FOLLOWING_KEY_PREFIX + userId;
     }
 
+    public static String buildUserFansKey(Long unfollowUserId) {
+        return "fans:" + unfollowUserId;
+    }
 }
