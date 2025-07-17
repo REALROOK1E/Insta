@@ -15,6 +15,12 @@
     <file url="file://$PROJECT_DIR$/Insta-framework/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Insta-framework/zekai-spring-boot-starter-jackson/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Insta-framework/zekai-spring-boot-starter-jackson/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-count/insta-count-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-count/insta-count-api/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-count/insta-count-biz/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-count/insta-count-biz/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-count/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/insta-count/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/insta-distributed-id-generator/insta-distributed-id-generator-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/insta-distributed-id-generator/insta-distributed-id-generator-api/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/insta-distributed-id-generator/insta-distributed-id-generator-biz/src/main/java" charset="UTF-8" />
