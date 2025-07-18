@@ -21,7 +21,9 @@ public enum ResponseCodeEnum implements ExceptionInterface {
     NOTE_NOT_FOUND("NOTE-20002", "笔记不存在"),
     NOTE_PRIVATE("NOTE-20003", "作者已将该笔记设置为仅自己可见"),
     NOTE_UPDATE_FAIL("NOTE-20004", "笔记更新失败"),
-    TOPIC_NOT_FOUND("NOTE-20005","没找到标题" );
+    TOPIC_NOT_FOUND("NOTE-20005","没找到标题" ),
+    NOTE_ALREADY_LIKED("NOTE-20008", "您已经点赞过该笔记")
+            ;
 
     // 异常码
     private final String errorCode;

@@ -28,4 +28,6 @@ public interface NoteService {
      */
     void deleteNoteLocalCache(Long noteId);
     Response<?> deleteNote(DeleteNoteReqVO deleteNoteReqVO);
+
+    Response<?> likeNote(LikeNoteReqVO likeNoteReqVO);
 }

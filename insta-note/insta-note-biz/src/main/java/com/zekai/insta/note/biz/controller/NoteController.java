@@ -48,4 +48,10 @@ public class NoteController {
         return noteService.deleteNote(deleteNoteReqVO);
     }
 
+    @PostMapping(value = "/like")
+    @ApiOperationLog(description = "点赞笔记")
+    public Response<?> likeNote(@Validated @RequestBody LikeNoteReqVO likeNoteReqVO) {
+        return noteService.likeNote(likeNoteReqVO);
+    }
+
 }

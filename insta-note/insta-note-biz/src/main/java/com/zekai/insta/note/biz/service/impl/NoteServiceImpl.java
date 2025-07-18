@@ -5,6 +5,7 @@ import cn.hutool.core.util.RandomUtil;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.zekai.framework.common.Exception.BizException;
 import com.zekai.framework.common.response.Response;
 import com.zekai.framework.common.util.JsonUtils;
@@ -14,10 +15,7 @@ import com.zekai.insta.note.biz.constant.RedisKeyConstants;
 import com.zekai.insta.note.biz.domain.dataobject.NoteDO;
 import com.zekai.insta.note.biz.domain.mapper.NoteDOMapper;
 import com.zekai.insta.note.biz.domain.mapper.TopicDOMapper;
-import com.zekai.insta.note.biz.enums.NoteStatusEnum;
-import com.zekai.insta.note.biz.enums.NoteTypeEnum;
-import com.zekai.insta.note.biz.enums.NoteVisibleEnum;
-import com.zekai.insta.note.biz.enums.ResponseCodeEnum;
+import com.zekai.insta.note.biz.enums.*;
 import com.zekai.insta.note.biz.model.vo.*;
 import com.zekai.insta.note.biz.rpc.DistributedIdGeneratorRpcService;
 import com.zekai.insta.note.biz.rpc.KeyValueRpcService;
@@ -30,14 +28,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -84,6 +86,7 @@ public class NoteServiceImpl implements NoteService {
             .maximumSize(10000) // 设置缓存的最大容量为 10000 个条目
             .expireAfterWrite(1, TimeUnit.HOURS) // 设置缓存条目在写入后 1 小时过期
             .build();
+
     /**
      * 笔记详情
      *
@@ -201,7 +204,7 @@ public class NoteServiceImpl implements NoteService {
         threadPoolTaskExecutor.submit(() -> {
             String noteDetailJson1 = JsonUtils.toJsonString(findNoteDetailRspVO);
             // 过期时间（保底1天 + 随机秒数，将缓存过期时间打散，防止同一时间大量缓存失效，导致数据库压力太大）
-            long expireSeconds = 60*60*24 + RandomUtil.randomInt(60*60*24);
+            long expireSeconds = 60 * 60 * 24 + RandomUtil.randomInt(60 * 60 * 24);
             redisTemplate.opsForValue().set(noteDetailRedisKey, noteDetailJson1, expireSeconds, TimeUnit.SECONDS);
         });
 
@@ -211,6 +214,7 @@ public class NoteServiceImpl implements NoteService {
 
     /**
      * 校验笔记的可见性（针对 VO 实体类）
+     *
      * @param userId
      * @param findNoteDetailRspVO
      */
@@ -220,11 +224,13 @@ public class NoteServiceImpl implements NoteService {
             checkNoteVisible(visible, userId, findNoteDetailRspVO.getCreatorId());
         }
     }
+
     /**
      * 校验笔记的可见性
-     * @param visible 是否可见
+     *
+     * @param visible    是否可见
      * @param currUserId 当前用户 ID
-     * @param creatorId 笔记创建者
+     * @param creatorId  笔记创建者
      */
     private void checkNoteVisible(Integer visible, Long currUserId, Long creatorId) {
         if (Objects.equals(visible, NoteVisibleEnum.PRIVATE.getCode())
@@ -232,6 +238,7 @@ public class NoteServiceImpl implements NoteService {
             throw new BizException(ResponseCodeEnum.NOTE_PRIVATE);
         }
     }
+
     /**
      * 笔记发布
      *
@@ -418,6 +425,7 @@ public class NoteServiceImpl implements NoteService {
                     public void onSuccess(SendResult sendResult) {
                         log.info("## 延时删除 Redis 笔记缓存消息发送成功...");
                     }
+
                     @Override
                     public void onException(Throwable e) {
                         log.error("## 延时删除 Redis 笔记缓存消息发送失败...", e);
@@ -428,7 +436,7 @@ public class NoteServiceImpl implements NoteService {
         );
 
         // 删除本地缓存
-       // LOCAL_CACHE.invalidate(noteId);
+        // LOCAL_CACHE.invalidate(noteId);
         rocketMQTemplate.syncSend(MQConstants.TOPIC_DELETE_NOTE_LOCAL_CACHE, noteId);
         log.info("====> MQ：删除笔记本地缓存发送成功...");
         // 笔记内容更新
@@ -489,6 +497,153 @@ public class NoteServiceImpl implements NoteService {
         log.info("====> MQ：删除笔记本地缓存发送成功...");
 
         return Response.success();
+    }
+
+    /**
+     * 点赞笔记
+     *
+     * @param likeNoteReqVO
+     * @return
+     */
+    @Override
+    public Response<?> likeNote(LikeNoteReqVO likeNoteReqVO) {
+        // 1. 校验被点赞的笔记是否存在
+        // 笔记ID
+        Long noteId = likeNoteReqVO.getId();
+
+
+        // 1. 校验被点赞的笔记是否存在
+        checkNoteIsExist(noteId);
+        // 2. 判断目标笔记，是否已经点赞过
+        // 当前登录用户ID
+        Long userId = LoginUserContextHolder.getUserId();
+
+        // 布隆过滤器 Key
+        String bloomUserNoteLikeListKey = RedisKeyConstants.buildBloomUserNoteLikeListKey(userId);
+
+        DefaultRedisScript<Long> script = new DefaultRedisScript<>();
+        // Lua 脚本路径
+        script.setScriptSource(new ResourceScriptSource(new ClassPathResource("/lua/bloom_note_like_check.lua")));
+
+        // 返回值类型
+
+        script.setResultType(Long.class);
+
+        // 执行 Lua 脚本，拿到返回结果
+        Long result = redisTemplate.execute(script, Collections.singletonList(bloomUserNoteLikeListKey), noteId);
+
+        NoteLikeLuaResultEnum noteLikeLuaResultEnum = NoteLikeLuaResultEnum.valueOf(result);
+
+        switch (noteLikeLuaResultEnum) {
+            // Redis 中布隆过滤器不存在
+            case BLOOM_NOT_EXIST -> {
+                // TODO: 从数据库中校验笔记是否被点赞，并异步初始化布隆过滤器，设置过期时间
+                int count = noteDOMapper.selectCountByUserIdAndNoteId(userId, noteId);
+
+                // 保底1天+随机秒数
+                long expireSeconds = 60 * 60 * 24 + RandomUtil.randomInt(60 * 60 * 24);
+
+                // 目标笔记已经被点赞
+                if (count > 0) {
+                    asynBatchAddNoteLike2BloomAndExpire(userId, expireSeconds, bloomUserNoteLikeListKey);
+                    throw new BizException(ResponseCodeEnum.NOTE_ALREADY_LIKED);
+                }
+
+                // 若数据库中也没有点赞记录，说明该用户还未点赞过任何笔记
+                // Lua 脚本路径
+                script.setScriptSource(new ResourceScriptSource(new ClassPathResource("/lua/bloom_add_note_like_and_expire.lua")));
+                // 返回值类型
+                script.setResultType(Long.class);
+                redisTemplate.execute(script, Collections.singletonList(bloomUserNoteLikeListKey), noteId, expireSeconds);
+            }
+            // 目标笔记已经被点赞
+            case NOTE_LIKED -> throw new BizException(ResponseCodeEnum.NOTE_ALREADY_LIKED);
+        }
+
+        // 3. 更新用户 ZSET 点赞列表
+
+        // 4. 发送 MQ, 将点赞数据落库
+
+        return Response.success();
+    }
+
+    /**
+     * 校验笔记是否存在
+     *
+     * @param noteId
+     */
+    private void checkNoteIsExist(Long noteId) {
+        // 先从本地缓存校验
+        String findNoteDetailRspVOStrLocalCache = LOCAL_CACHE.getIfPresent(noteId);
+        // 解析 Json 字符串为 VO 对象
+        FindNoteDetailRspVO findNoteDetailRspVO = JsonUtils.parseObject(findNoteDetailRspVOStrLocalCache, FindNoteDetailRspVO.class);
+
+        // 若本地缓存没有
+        if (Objects.isNull(findNoteDetailRspVO)) {
+            // 再从 Redis 中校验
+            String noteDetailRedisKey = RedisKeyConstants.buildNoteDetailKey(noteId);
+
+            String noteDetailJson = redisTemplate.opsForValue().get(noteDetailRedisKey);
+
+            // 解析 Json 字符串为 VO 对象
+            findNoteDetailRspVO = JsonUtils.parseObject(noteDetailJson, FindNoteDetailRspVO.class);
+
+            // 都不存在，再查询数据库校验是否存在
+            if (Objects.isNull(findNoteDetailRspVO)) {
+                int count = noteDOMapper.selectCountByNoteId(noteId);
+
+                // 若数据库中也不存在，提示用户
+                if (count == 0) {
+                    throw new BizException(ResponseCodeEnum.NOTE_NOT_FOUND);
+                }
+
+                // 若数据库中存在，异步同步一下缓存
+                threadPoolTaskExecutor.submit(() -> {
+                    FindNoteDetailReqVO findNoteDetailReqVO = FindNoteDetailReqVO.builder().id(noteId).build();
+                    try {
+                        findNoteDetail(findNoteDetailReqVO);
+                    } catch (ExecutionException e) {
+                        log.error("## 异步查询笔记详情失败: {}", e.getMessage());
+                        throw new RuntimeException(e);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * 异步初始化布隆过滤器
+     *
+     * @param userId
+     * @param script
+     * @param expireSeconds
+     * @param bloomUserNoteLikeListKey
+     */
+    private void asynBatchAddNoteLike2BloomAndExpire(Long userId, long expireSeconds, String bloomUserNoteLikeListKey) {
+        threadPoolTaskExecutor.submit(() -> {
+            try {
+                // 异步全量同步一下，并设置过期时间
+                List<NoteDO> noteLikeDOS = noteDOMapper.selectByUserId(userId);
+
+                if (CollUtil.isNotEmpty(noteLikeDOS)) {
+                    DefaultRedisScript<Long> script = new DefaultRedisScript<>();
+                    // Lua 脚本路径
+                    script.setScriptSource(new ResourceScriptSource(new ClassPathResource("/lua/bloom_batch_add_note_like_and_expire.lua")));
+                    // 返回值类型
+                    script.setResultType(Long.class);
+
+                    // 构建 Lua 参数
+                    List<Object> luaArgs = Lists.newArrayList();
+                    noteLikeDOS.forEach(noteLikeDO -> luaArgs.add(noteLikeDO.getId())); // 将每个点赞的笔记 ID 传入
+                    luaArgs.add(expireSeconds);  // 最后一个参数是过期时间（秒）
+                    redisTemplate.execute(script, Collections.singletonList(bloomUserNoteLikeListKey), luaArgs.toArray());
+                }
+            } catch (Exception e) {
+                log.error("## 异步初始化布隆过滤器异常: ", e);
+            }
+        });
     }
 
 }
