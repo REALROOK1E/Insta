@@ -34,6 +34,7 @@
     <module>insta-count/insta-count-api</module>
     <module>insta-count/insta-count-biz</module>
     <module>insta-count/insta-count-biz</module>
+      <module>insta-search</module>
   </modules>
 
   <properties>
@@ -67,6 +68,7 @@
     <caffeine.version>3.1.8</caffeine.version>
     <rocketmq.version>2.2.3</rocketmq.version>
     <buffertrigger.version>0.2.21</buffertrigger.version>
+    <elasticsearch.version>7.3.0</elasticsearch.version>
   </properties>
 
   <!-- 统一依赖管理 -->
@@ -231,6 +233,22 @@
         <groupId>org.apache.rocketmq</groupId>
         <artifactId>rocketmq-spring-boot-starter</artifactId>
         <version>${rocketmq.version}</version>
+      </dependency>
+      <!-- Elasticsearch 分布式搜索引擎 -->
+      <dependency>
+        <groupId>org.elasticsearch.client</groupId>
+        <artifactId>elasticsearch-rest-high-level-client</artifactId>
+        <version>${elasticsearch.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.elasticsearch.client</groupId>
+        <artifactId>elasticsearch-rest-client</artifactId>
+        <version>${elasticsearch.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.elasticsearch</groupId>
+        <artifactId>elasticsearch</artifactId>
+        <version>${elasticsearch.version}</version>
       </dependency>
     </dependencies>
 
