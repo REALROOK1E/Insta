@@ -58,4 +58,15 @@ public class SearchNoteRspVO {
      */
     private String likeTotal;
 
+    /**
+     * 被评论数
+     */
+    private String commentTotal;
+
+    /**
+     * 被收藏数
+     */
+    private String collectTotal;
+
+
 }

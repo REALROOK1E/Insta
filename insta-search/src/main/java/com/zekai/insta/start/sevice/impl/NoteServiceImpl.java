@@ -2,9 +2,13 @@ package com.zekai.insta.start.sevice.impl;
 
 
 import cn.hutool.core.collection.CollUtil;
+import com.alibaba.nacos.common.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.zekai.framework.common.constants.Timeconsts;
 import com.zekai.framework.common.response.PageResponse;
+import com.zekai.framework.common.util.DateUtils;
+import com.zekai.insta.start.enums.NotePublishTimeRangeEnum;
+import com.zekai.insta.start.enums.NoteSortTypeEnum;
 import com.zekai.insta.start.index.NoteIndex;
 import com.zekai.insta.start.model.vo.SearchNoteReqVO;
 import com.zekai.insta.start.model.vo.SearchNoteRspVO;
@@ -68,7 +72,8 @@ public class NoteServiceImpl implements NoteService {
         Integer type = searchNoteReqVO.getType();
         // 构建 SearchRequest，指定要查询的索引
         SearchRequest searchRequest = new SearchRequest(NoteIndex.NAME);
-
+        // 发布时间范围
+        Integer publishTimeRange = searchNoteReqVO.getPublishTimeRange();
         // 创建查询构建器
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         // 创建查询条件
@@ -83,8 +88,35 @@ public class NoteServiceImpl implements NoteService {
             boolQueryBuilder.filter(QueryBuilders.termQuery(NoteIndex.FIELD_NOTE_TYPE, type));
         }
 
+        // 按发布时间范围过滤
+        NotePublishTimeRangeEnum notePublishTimeRangeEnum = NotePublishTimeRangeEnum.valueOf(publishTimeRange);
 
 
+        if (Objects.nonNull(notePublishTimeRangeEnum)) {
+            // 结束时间
+            String endTime = LocalDateTime.now().format(Timeconsts.DateConstants.DATE_FORMAT_Y_M_D_H_M_S);
+            // 开始时间
+            String startTime = null;
+
+            switch (notePublishTimeRangeEnum) {
+                case DAY ->
+                        startTime = DateUtils.localDateTime2String(LocalDateTime.now().minusDays(1)); // 一天之前的时间
+                case WEEK ->
+                        startTime = DateUtils.localDateTime2String(LocalDateTime.now().minusWeeks(1)); // 一周之前的时间
+                case HALF_YEAR ->
+                        startTime = DateUtils.localDateTime2String(LocalDateTime.now().minusMonths(6)); // 半年之前的时间
+            }
+            // 设置时间范围
+            if (StringUtils.isNoneBlank(startTime)) {
+                boolQueryBuilder.filter(QueryBuilders.rangeQuery(NoteIndex.FIELD_NOTE_CREATE_TIME)
+                        .gte(startTime) // 大于等于
+                        .lte(endTime) // 小于等于
+                );
+            }
+        }
+
+        // 排序
+        NoteSortTypeEnum noteSortTypeEnum = NoteSortTypeEnum.valueOf(searchNoteReqVO.getSort());
         QueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(keyword)
                 .field(NoteIndex.FIELD_NOTE_TITLE, 2.0f) // 手动设置笔记标题的权重值为 2.0
                 .field(NoteIndex.FIELD_NOTE_TOPIC) // 不设置，权重默认为 1.0
@@ -201,7 +233,8 @@ public class NoteServiceImpl implements NoteService {
 
                 // 获取文档的所有字段（以 Map 的形式返回）
                 Map<String, Object> sourceAsMap = hit.getSourceAsMap();
-
+                Integer commentTotal = (Integer) sourceAsMap.get(NoteIndex.FIELD_NOTE_COMMENT_TOTAL);
+                Integer collectTotal = (Integer) sourceAsMap.get(NoteIndex.FIELD_NOTE_COLLECT_TOTAL);
                 // 提取特定字段值
                 Long noteId = (Long) sourceAsMap.get(NoteIndex.FIELD_NOTE_ID);
                 String cover = (String) sourceAsMap.get(NoteIndex.FIELD_NOTE_COVER);
@@ -227,9 +260,12 @@ public class NoteServiceImpl implements NoteService {
                         .title(title)
                         .highlightTitle(highlightedTitle)
                         .avatar(avatar)
+                        .updateTime(DateUtils.formatRelativeTime(updateTime))
                         .nickname(nickname)
                         .updateTime(updateTime)
                         .likeTotal(NumberUtils.formatNumberString(likeTotal))
+                        .commentTotal(NumberUtils.formatNumberString(commentTotal))
+                        .collectTotal(NumberUtils.formatNumberString(collectTotal))
                         .build();
                 searchNoteRspVOS.add(searchNoteRspVO);
             }
