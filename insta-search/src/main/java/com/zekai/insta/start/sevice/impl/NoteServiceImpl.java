@@ -114,7 +114,6 @@ public class NoteServiceImpl implements NoteService {
                 );
             }
         }
-
         // 排序
         NoteSortTypeEnum noteSortTypeEnum = NoteSortTypeEnum.valueOf(searchNoteReqVO.getSort());
         QueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(keyword)
@@ -260,7 +259,6 @@ public class NoteServiceImpl implements NoteService {
                         .title(title)
                         .highlightTitle(highlightedTitle)
                         .avatar(avatar)
-                        .updateTime(DateUtils.formatRelativeTime(updateTime))
                         .nickname(nickname)
                         .updateTime(updateTime)
                         .likeTotal(NumberUtils.formatNumberString(likeTotal))
