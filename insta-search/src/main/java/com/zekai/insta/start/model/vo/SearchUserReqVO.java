@@ -25,4 +25,6 @@ public class SearchUserReqVO {
     @Min(value = 1, message = "页码不能小于 1")
     private Integer pageNo = 1; // 默认值为第一页
 
+    private String highlightNickname;
+
 }

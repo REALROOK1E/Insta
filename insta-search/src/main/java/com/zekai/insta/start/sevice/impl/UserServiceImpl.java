@@ -1,8 +1,9 @@
 package com.zekai.insta.start.sevice.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.google.common.collect.Lists;
 import com.zekai.framework.common.response.PageResponse;
-import com.zekai.insta.start.insdex.UserIndex;
+import com.zekai.insta.start.index.UserIndex;
 import com.zekai.insta.start.model.vo.SearchUserReqVO;
 import com.zekai.insta.start.model.vo.SearchUserRspVO;
 import com.zekai.insta.start.sevice.UserService;
@@ -27,9 +28,12 @@ import java.util.Map;
 /**
  * as
  *
- * @author Administrator
+ * @author
  * @version 1.0
  * @date 2025/7/22
+ * 调用 .search() 方法执行搜索请求之前，构建高亮相关参数，并设置到 sourceBuilder 变量中；
+ * 拿到结果后，在循环中通过 .getHighlightFields() 方法获取高亮字段，并进行判空，以及是否包含 nickname 昵称字段；
+ * 若包含，则提取高亮字段值设置到 VO 返参中；
  */
 @Service
 @Slf4j
@@ -45,39 +49,30 @@ public class UserServiceImpl implements UserService {
         String keyword = searchUserReqVO.getKeyword();
         // 当前页码
         Integer pageNo = searchUserReqVO.getPageNo();
-
         // 构建 SearchRequest，指定索引
         SearchRequest searchRequest = new SearchRequest(UserIndex.NAME);
-
         // 构建查询内容
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-
         // 构建 multi_match 查询，查询 nickname 和 xiaohashu_id 字段
         sourceBuilder.query(QueryBuilders.multiMatchQuery(
                 keyword, UserIndex.FIELD_USER_NICKNAME, UserIndex.FIELD_USER_XIAOHASHU_ID));
-
         // 排序，按 fans_total 降序
         SortBuilder<?> sortBuilder = new FieldSortBuilder(UserIndex.FIELD_USER_FANS_TOTAL)
                 .order(SortOrder.DESC);
         sourceBuilder.sort(sortBuilder);
-
         // 设置分页，from 和 size
         int pageSize = 10; // 每页展示数据量
         int from = (pageNo - 1) * pageSize; // 偏移量
-
         sourceBuilder.from(from);
         sourceBuilder.size(pageSize);
-
         // 将构建的查询条件设置到 SearchRequest 中
         searchRequest.source(sourceBuilder);
-
         // 返参 VO 集合
         List<SearchUserRspVO> searchUserRspVOS = null;
         // 总文档数，默认为 0
         long total = 0;
         try {
             log.info("==> SearchRequest: {}", searchRequest);
-
             // 执行查询请求
             SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
 
@@ -103,7 +98,12 @@ public class UserServiceImpl implements UserService {
                 String xiaohashuId = (String) sourceAsMap.get(UserIndex.FIELD_USER_XIAOHASHU_ID);
                 Integer noteTotal = (Integer) sourceAsMap.get(UserIndex.FIELD_USER_NOTE_TOTAL);
                 Integer fansTotal = (Integer) sourceAsMap.get(UserIndex.FIELD_USER_FANS_TOTAL);
-
+                // 获取高亮字段
+                String highlightedNickname = null;
+                if (CollUtil.isNotEmpty(hit.getHighlightFields())
+                        && hit.getHighlightFields().containsKey(UserIndex.FIELD_USER_NICKNAME)) {
+                    highlightedNickname = hit.getHighlightFields().get(UserIndex.FIELD_USER_NICKNAME).fragments()[0].string();
+                }
                 // 构建 VO 实体类
                 SearchUserRspVO searchUserRspVO = SearchUserRspVO.builder()
                         .userId(userId)
