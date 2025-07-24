@@ -35,6 +35,7 @@
     <module>insta-count/insta-count-biz</module>
     <module>insta-count/insta-count-biz</module>
       <module>insta-search</module>
+    <module>Insta-comment</module>
   </modules>
 
   <properties>
