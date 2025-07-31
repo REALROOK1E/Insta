@@ -71,6 +71,7 @@
     <buffertrigger.version>0.2.21</buffertrigger.version>
     <elasticsearch.version>7.3.0</elasticsearch.version>
     <canal.version>1.1.7</canal.version>
+    <rocketmq-client.version>5.0.0</rocketmq-client.version>
   </properties>
 
   <!-- 统一依赖管理 -->
@@ -266,6 +267,11 @@
         <groupId>com.alibaba.otter</groupId>
         <artifactId>canal.protocol</artifactId>
         <version>${canal.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.rocketmq</groupId>
+        <artifactId>rocketmq-client</artifactId>
+        <version>${rocketmq-client.version}</version>
       </dependency>
     </dependencies>
 
