@@ -101,3 +101,61 @@ A distributed, highly available large-scale microservices blog system, which cov
 - Like/unlike/delete for comments: MQ async, batch consumption/writes, in-memory merge for high-performance.
 
 ---
+
+## Getting Started
+
+These instructions will help you set up and run the InstaVerse project on your local machine for development and testing purposes.
+
+### Prerequisites
+
+- Java 17+
+- Maven 3.6+
+- Git
+- Docker (optional, for running services like MySQL, Redis)
+
+### Installation
+
+1. Clone the repository:
+   
+   ```bash
+   git clone https://github.com/your-org/insta.git
+   cd Insta
+   ```
+2. Build all modules:
+   
+   ```bash
+   mvn clean install -DskipTests
+   ```
+
+### Running the Services
+
+Each microservice is located in its respective module folder. To start a service:
+
+```bash
+cd <module-folder>/src/main
+mvn spring-boot:run
+```
+
+For a full development environment, consider using Docker Compose to start dependencies (e.g., MySQL, Redis, Elasticsearch).
+
+### Testing
+
+Run unit and integration tests with:
+
+```bash
+mvn test
+```
+
+### Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Commit your changes: `git commit -m 'feat: add your feature'`
+4. Push to the branch: `git push origin feature/your-feature`
+5. Open a Pull Request.
+
+### License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
